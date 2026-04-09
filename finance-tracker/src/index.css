@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  @apply bg-gray-50 text-gray-900;
+  font-family: 'Inter', system-ui, sans-serif;
+  overscroll-behavior: none;
+}
+
+/* Safe area insets for notched phones */
+.safe-pb {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.safe-pt {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* Bottom sheet / drawer animation */
+.drawer-enter {
+  transform: translateY(100%);
+}
+.drawer-enter-active {
+  transform: translateY(0);
+  transition: transform 300ms ease-out;
+}
+.drawer-exit-active {
+  transform: translateY(100%);
+  transition: transform 250ms ease-in;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 2px;
+}

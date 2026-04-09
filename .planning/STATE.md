@@ -21,34 +21,19 @@
 - GAS deployed with all 16 categories seeded
 - OAuth Client ID wired in
 - Login works ✅
-- **BLOCKER:** `verifyToken` in Code.gs throws "Token audience mismatch" — categories fail to load so the category grid is empty in the drawer
+- `verifyToken` aud check removed and redeployed ✅
+- **BLOCKER:** Categories still not loading after the fix — error persists. Root cause unknown, needs investigation next session.
 
-### Current focus
-Fix GAS `verifyToken` — the `aud` field in the token doesn't match CLIENT_ID.
-
-### Fix to apply next session
-In Code.gs `verifyToken`, the `aud` value from tokeninfo is the numeric project ID, not the OAuth client ID string. Two options:
-1. **Simplest:** Remove the `aud` check entirely (tokeninfo already validates authenticity)
-2. **Correct:** Log `info.aud` to see the actual value and match CLIENT_ID to it
-
-The updated `verifyToken` to paste into Code.gs:
-```javascript
-function verifyToken(idToken) {
-  const res = UrlFetchApp.fetch(
-    'https://oauth2.googleapis.com/tokeninfo?id_token=' + idToken,
-    { muteHttpExceptions: true }
-  );
-  const info = JSON.parse(res.getContentText());
-  if (info.error) throw new Error('Token invalid: ' + info.error);
-  return info.email;
-}
-```
-After saving → Deploy → New version → Deploy.
+### Fix to investigate next session
+Categories API call still returning error after removing `aud` check. Possible causes:
+1. GAS new deployment URL changed — check if redeploy created a new URL (old URL still cached in `src/api/gas.ts`)
+2. Token itself is malformed/expired — try signing out and back in first
+3. GAS `getCategories` function has a different bug — add `Logger.log(info)` in `verifyToken` to see full token payload
 
 ### What's next after fix
 - Verify categories load in drawer ✅
-- Add a test transaction ✅
-- Confirm it appears in the list and Google Sheet ✅
+- Add a test transaction ✅  
+- Confirm it appears in list and Google Sheet ✅
 - Phase 1 complete → start Phase 2 (Dashboard & Charts)
 
 ---

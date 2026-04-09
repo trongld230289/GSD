@@ -1,0 +1,58 @@
+{
+  "purchases": [
+    {
+      "id": "mnho5skbhyc0f425mwp",
+      "type": "PNJ",
+      "qty": 1,
+      "buyPrice": 8580000,
+      "note": ""
+    },
+    {
+      "id": "mnho841xlr4jniuwlnb",
+      "type": "PNJ",
+      "qty": 5,
+      "buyPrice": 8610000,
+      "note": ""
+    },
+    {
+      "id": "mnho8gnfygncfxiv6gp",
+      "type": "PNJ",
+      "qty": 3,
+      "buyPrice": 12980000,
+      "note": ""
+    },
+    {
+      "id": "mnho8xatxljhg7dlukq",
+      "type": "Mi Hồng",
+      "qty": 2,
+      "buyPrice": 17430000,
+      "note": ""
+    },
+    {
+      "id": "mnho92wpg9izzjkxeka",
+      "type": "Mi Hồng",
+      "qty": 2,
+      "buyPrice": 16280000,
+      "note": ""
+    },
+    {
+      "id": "mnho98ag2bpd9grrenq",
+      "type": "Mi Hồng",
+      "qty": 2,
+      "buyPrice": 15490000,
+      "note": ""
+    },
+    {
+      "id": "mnho9iddcdfe59znv3g",
+      "type": "Mi Hồng",
+      "qty": 2,
+      "buyPrice": 15200000,
+      "note": ""
+    }
+  ],
+  "currentPrices": {
+    "Mi Hồng": 17100000,
+    "PNJ": 16950000
+  },
+  "savedAt": "2026-04-02T16:34:38.545Z"
+}

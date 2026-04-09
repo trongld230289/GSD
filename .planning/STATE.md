@@ -1,8 +1,16 @@
 # Project State: Finance Tracker
 
-**Last Updated:** 2026-04-07
-**Current Phase:** Not started — ready for Phase 1
-**Overall Status:** 🟡 Planning Complete
+**Last Updated:** 2026-04-09
+**Current Phase:** Phase 1 — Executing Plan 2 (React Scaffold)
+**Overall Status:** 🟢 In Progress
+
+## Deployment Info
+
+| Key | Value |
+|---|---|
+| GAS Web App URL | `https://script.google.com/macros/s/AKfycbysl0gDewDC6fr-7eiqpO0nlK5olVbNyy5DnGghkSSpDdQcB01MHOy3XLCrSUYo66Ui/exec` |
+| Google OAuth Client ID | `993101146522-hg4h22245evgi99fk60viflj7vk83gq0.apps.googleusercontent.com` |
+| GitHub Pages URL | ⏳ TODO — after hosting setup |
 
 ---
 

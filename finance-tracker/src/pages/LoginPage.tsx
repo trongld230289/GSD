@@ -1,8 +1,7 @@
 import { useEffect, useCallback } from 'react'
 import { useAuthStore } from '../store/useStore'
 
-// Replace this with your actual OAuth Client ID from Google Cloud Console
-const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID'
+const GOOGLE_CLIENT_ID = '993101146522-hg4h22245evgi99fk60viflj7vk83gq0.apps.googleusercontent.com'
 
 declare global {
   interface Window {

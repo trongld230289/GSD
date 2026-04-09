@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vàng Tracker — Tính Lời/Lỗ Đầu Tư Vàng</title>
+  <style>
+    :root {
+      --gold: #c9a227;
+      --gold-light: #f5e6b0;
+      --gold-dark: #9a7a0f;
+      --profit: #16a34a;
+      --profit-bg: #dcfce7;
+      --loss: #dc2626;
+      --loss-bg: #fee2e2;
+      --neutral: #6b7280;
+      --bg: #fafaf9;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --text: #111827;
+      --text-muted: #6b7280;
+      --radius: 12px;
+      --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+      --shadow-md: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.06);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #1a1008 0%, #3d2b00 60%, #6b4700 100%);
+      color: #fff;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    header h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    header h1 span.icon { font-size: 1.4rem; }
+    header .header-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+    /* ── Layout ── */
+    .container { max-width: 960px; margin: 0 auto; padding: 20px 16px; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: .85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    /* ── Dashboard ── */
+    .dashboard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+    @media (max-width: 600px) { .dashboard { grid-template-columns: 1fr 1fr; } }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .stat-card .label { font-size: .75rem; color: var(--text-muted); font-weight: 500; margin-bottom: 4px; }
+    .stat-card .value { font-size: 1.25rem; font-weight: 700; }
+    .stat-card .sub { font-size: .78rem; color: var(--text-muted); margin-top: 2px; }
+    .profit .value { color: var(--profit); }
+    .loss .value { color: var(--loss); }
+    .neutral .value { color: var(--gold-dark); }
+
+    /* ── Current Price section ── */
+    .price-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 480px) { .price-row { grid-template-columns: 1fr; } }
+    .price-input-group { display: flex; flex-direction: column; gap: 4px; }
+    .price-input-group label { font-size: .82rem; font-weight: 600; color: var(--text-muted); }
+    .price-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--gold-light);
+      color: var(--gold-dark);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: .72rem;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    /* ── Form ── */
+    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    @media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: .82rem; font-weight: 500; color: var(--text); }
+    input, select {
+      padding: 9px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: .9rem;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      transition: border-color .15s;
+    }
+    input:focus, select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,162,39,.12); }
+    input[type="number"]::placeholder { color: #bbb; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-size: .88rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: opacity .15s, transform .1s;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn-primary { background: var(--gold); color: #fff; }
+    .btn-primary:hover { background: var(--gold-dark); }
+    .btn-outline { background: #fff; border: 1.5px solid var(--border); color: var(--text); }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold-dark); }
+    .btn-danger { background: #fff; border: 1.5px solid #fecaca; color: var(--loss); }
+    .btn-danger:hover { background: var(--loss-bg); }
+    .btn-sm { padding: 5px 10px; font-size: .78rem; border-radius: 6px; }
+    .btn-ghost { background: transparent; border: none; color: var(--text-muted); padding: 5px 8px; font-size: .82rem; cursor: pointer; border-radius: 6px; }
+    .btn-ghost:hover { background: #f3f4f6; }
+
+    /* ── Filter tabs ── */
+    .filter-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+    .tab {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: .82rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      color: var(--text-muted);
+      transition: all .15s;
+    }
+    .tab.active { background: var(--gold); border-color: var(--gold); color: #fff; }
+
+    /* ── Table ── */
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+    th {
+      text-align: left;
+      padding: 8px 10px;
+      font-size: .75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--text-muted);
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+    }
+    td { padding: 10px 10px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafaf9; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: .72rem;
+      font-weight: 600;
+    }
+    .badge-mihong { background: #fce7f3; color: #be185d; }
+    .badge-pnj { background: #e0f2fe; color: #0369a1; }
+
+    .profit-cell { color: var(--profit); font-weight: 600; }
+    .loss-cell { color: var(--loss); font-weight: 600; }
+    .neutral-cell { color: var(--text-muted); }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 16px;
+      color: var(--text-muted);
+    }
+    .empty-state .icon { font-size: 2.5rem; margin-bottom: 8px; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 24px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: var(--shadow-md);
+    }
+    .modal h2 { font-size: 1rem; font-weight: 700; margin-bottom: 16px; }
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: #111;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: .85rem;
+      z-index: 200;
+      transition: transform .3s ease;
+      white-space: nowrap;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── Responsive tweaks ── */
+    @media (max-width: 480px) {
+      header { padding: 14px 16px; }
+      header h1 { font-size: 1rem; }
+      .container { padding: 14px 12px; }
+      .card { padding: 14px; }
+      .btn { padding: 8px 12px; font-size: .82rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1><span class="icon">🥇</span> Vàng Tracker</h1>
+  <div class="header-actions">
+    <div id="fileStatus" style="display:none; align-items:center; gap:6px; background:rgba(255,255,255,.12); border-radius:6px; padding:4px 10px; font-size:.75rem; color:#fff;">
+      <span>🔗</span><span id="fileStatusName"></span>
+      <button onclick="unlinkFile()" style="background:none;border:none;color:rgba(255,255,255,.6);cursor:pointer;font-size:.75rem;padding:0 2px;" title="Huỷ liên kết file">✕</button>
+    </div>
+    <button class="btn btn-outline btn-sm" id="btnImport" title="Mở file JSON — tự động sync mọi thay đổi">⬆ Mở file</button>
+    <button class="btn btn-outline btn-sm" id="btnExport" title="Xuất file JSON mới">⬇ Export</button>
+    <input type="file" id="fileInput" accept=".json" style="display:none" />
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Dashboard -->
+  <div class="dashboard" id="dashboard">
+    <div class="stat-card neutral">
+      <div class="label">Tổng vốn đầu tư</div>
+      <div class="value" id="totalInvested">0 ₫</div>
+      <div class="sub" id="totalQty">0 chỉ</div>
+    </div>
+    <div class="stat-card neutral">
+      <div class="label">Giá trị hiện tại</div>
+      <div class="value" id="totalCurrent">0 ₫</div>
+      <div class="sub">Theo giá nhập</div>
+    </div>
+    <div class="stat-card" id="plCard">
+      <div class="label">Lời / Lỗ</div>
+      <div class="value" id="totalPL">0 ₫</div>
+      <div class="sub" id="totalPLPct">0%</div>
+    </div>
+  </div>
+
+  <!-- Current Prices -->
+  <div class="card">
+    <div class="card-title">💰 Giá mua vào hiện tại (VNĐ / chỉ)</div>
+    <div class="price-row">
+      <div class="price-input-group">
+        <label for="priceMiHong">Mi Hồng</label>
+        <input type="number" id="priceMiHong" placeholder="VD: 9200 hoặc 9200000" min="0" />
+        <div class="price-badge" id="labelBadgeMiHong">🏷 <span id="labelMiHongPrice">Chưa nhập</span></div>
+        <div class="price-badge" id="hintMiHong" style="display:none;background:#dcfce7;color:#16a34a">→ <span id="hintMiHongVal"></span></div>
+      </div>
+      <div class="price-input-group">
+        <label for="pricePNJ">PNJ</label>
+        <input type="number" id="pricePNJ" placeholder="VD: 9600 hoặc 9600000" min="0" />
+        <div class="price-badge" id="labelBadgePNJ">🏷 <span id="labelPNJPrice">Chưa nhập</span></div>
+        <div class="price-badge" id="hintPNJ" style="display:none;background:#dcfce7;color:#16a34a">→ <span id="hintPNJVal"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Purchase -->
+  <div class="card">
+    <div class="card-title" id="formTitle">➕ Thêm lần mua vàng</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="fType">Loại vàng</label>
+        <select id="fType">
+          <option value="Mi Hồng">Mi Hồng</option>
+          <option value="PNJ">PNJ</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="fQty">Số lượng (chỉ)</label>
+        <input type="number" id="fQty" placeholder="Ví dụ: 2" min="0" step="0.1" />
+      </div>
+      <div class="form-group full">
+        <label for="fPrice">Giá mua (VNĐ / chỉ) — nhập 8000 = 8 triệu</label>
+        <input type="number" id="fPrice" placeholder="VD: 8500 hoặc 8500000" min="0" />
+        <div class="price-badge" id="fPriceHint" style="display:none">= <span id="fPriceHintVal"></span></div>
+      </div>
+      <div class="form-group full" style="grid-column: 1 / -1">
+        <label for="fNote">Ghi chú (tuỳ chọn)</label>
+        <input type="text" id="fNote" placeholder="Mua dịp nào, ghi chú thêm..." />
+      </div>
+    </div>
+    <div style="display:flex; gap:8px; margin-top:14px;">
+      <button class="btn btn-primary" id="btnSave">💾 Lưu</button>
+      <button class="btn btn-outline" id="btnCancel" style="display:none">Huỷ</button>
+    </div>
+  </div>
+
+  <!-- Purchase List -->
+  <div class="card">
+    <div class="card-title">📋 Lịch sử mua vàng</div>
+    <div class="filter-tabs">
+      <button class="tab active" data-filter="all">Tất cả</button>
+      <button class="tab" data-filter="Mi Hồng">Mi Hồng</button>
+      <button class="tab" data-filter="PNJ">PNJ</button>
+    </div>
+    <div class="table-wrap" id="tableWrap">
+      <div class="empty-state">
+        <div class="icon">🏅</div>
+        <div>Chưa có dữ liệu. Thêm lần mua vàng đầu tiên!</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <h2>🗑 Xác nhận xóa</h2>
+    <p style="color: var(--text-muted); font-size:.88rem;">Bạn có chắc muốn xóa lần mua này không? Hành động này không thể hoàn tác.</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" id="btnDeleteCancel">Huỷ</button>
+      <button class="btn btn-danger" id="btnDeleteConfirm">Xóa</button>
+    </div>
+  </div>
+</div>
+
+<!-- Import Confirm Modal -->
+<div class="modal-overlay" id="importModal">
+  <div class="modal">
+    <h2>⬆ Xác nhận mở file</h2>
+    <p style="color: var(--text-muted); font-size:.88rem;">Dữ liệu hiện tại sẽ được thay bằng dữ liệu từ file. Sau đó mọi thay đổi sẽ <strong>tự động ghi thẳng vào file này</strong> mà không cần Export.</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" id="btnImportCancel">Huỷ</button>
+      <button class="btn btn-primary" id="btnImportConfirm">Mở & Liên kết</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  // ── Storage keys ──
+  const KEY_PURCHASES = 'vangtracker_purchases';
+  const KEY_PRICES    = 'vangtracker_prices';
+
+  // ── State ──
+  let purchases = [];
+  let currentPrices = { 'Mi Hồng': 0, PNJ: 0 };
+  let editingId = null;
+  let pendingDeleteId = null;
+  let pendingImportData = null;
+  let activeFilter = 'all';
+  let linkedFileHandle = null; // File System Access API handle
+
+  // ── Helpers ──
+  const fmt = n => Number(n).toLocaleString('vi-VN') + ' ₫';
+  const fmtNum = n => Number(n).toLocaleString('vi-VN');
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
+  // Nếu nhập số < 100000, tự nhân 1000 (vd: 8000 → 8.000.000)
+  const parsePrice = v => (v > 0 && v < 100000) ? v * 1000 : v;
+
+  function showToast(msg, dur = 2500) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), dur);
+  }
+
+  // ── Persistence ──
+  function save() {
+    localStorage.setItem(KEY_PURCHASES, JSON.stringify(purchases));
+    localStorage.setItem(KEY_PRICES, JSON.stringify(currentPrices));
+    syncLinkedFile();
+  }
+
+  async function syncLinkedFile() {
+    if (!linkedFileHandle) return;
+    try {
+      const writable = await linkedFileHandle.createWritable();
+      const data = { purchases, currentPrices, savedAt: new Date().toISOString() };
+      await writable.write(JSON.stringify(data, null, 2));
+      await writable.close();
+      updateFileStatus();
+    } catch (err) {
+      // Quyền bị thu hồi hoặc lỗi — unlink
+      linkedFileHandle = null;
+      updateFileStatus();
+      showToast('⚠️ Mất kết nối file, dùng Export để lưu', 3500);
+    }
+  }
+
+  function updateFileStatus() {
+    const el = document.getElementById('fileStatus');
+    const nameEl = document.getElementById('fileStatusName');
+    if (linkedFileHandle) {
+      nameEl.textContent = linkedFileHandle.name;
+      el.style.display = 'flex';
+    } else {
+      el.style.display = 'none';
+    }
+  }
+
+  function unlinkFile() {
+    linkedFileHandle = null;
+    updateFileStatus();
+    showToast('🔗 Đã huỷ liên kết file');
+  }
+
+  function load() {
+    try { purchases = JSON.parse(localStorage.getItem(KEY_PURCHASES)) || []; } catch { purchases = []; }
+    try { currentPrices = JSON.parse(localStorage.getItem(KEY_PRICES)) || { 'Mi Hồng': 0, PNJ: 0 }; } catch { currentPrices = { 'Mi Hồng': 0, PNJ: 0 }; }
+  }
+
+  // ── Render current prices ──
+  function renderPriceInputs() {
+    const mh = currentPrices['Mi Hồng'];
+    const pnj = currentPrices['PNJ'];
+    // Chỉ set input value khi không đang focus (tránh ghi đè khi đang gõ)
+    const mhEl = document.getElementById('priceMiHong');
+    const pnjEl = document.getElementById('pricePNJ');
+    if (document.activeElement !== mhEl) mhEl.value = mh || '';
+    if (document.activeElement !== pnjEl) pnjEl.value = pnj || '';
+    document.getElementById('labelMiHongPrice').textContent = mh ? fmtNum(mh) + ' ₫/chỉ' : 'Chưa nhập';
+    document.getElementById('labelPNJPrice').textContent = pnj ? fmtNum(pnj) + ' ₫/chỉ' : 'Chưa nhập';
+  }
+
+  // ── Render dashboard ──
+  function renderDashboard() {
+    const filtered = activeFilter === 'all' ? purchases : purchases.filter(p => p.type === activeFilter);
+
+    let totalInvested = 0, totalCurrent = 0, totalQty = 0;
+    purchases.forEach(p => {
+      totalInvested += p.qty * p.buyPrice;
+      totalCurrent  += p.qty * (currentPrices[p.type] || 0);
+      totalQty      += p.qty;
+    });
+
+    const pl = totalCurrent - totalInvested;
+    const pct = totalInvested ? ((pl / totalInvested) * 100).toFixed(2) : 0;
+
+    document.getElementById('totalInvested').textContent = fmt(totalInvested);
+    document.getElementById('totalCurrent').textContent  = fmt(totalCurrent);
+    document.getElementById('totalQty').textContent      = fmtNum(totalQty) + ' chỉ';
+    document.getElementById('totalPL').textContent       = (pl >= 0 ? '+' : '') + fmt(pl);
+    document.getElementById('totalPLPct').textContent    = (pl >= 0 ? '+' : '') + pct + '%';
+
+    const plCard = document.getElementById('plCard');
+    plCard.classList.remove('profit', 'loss', 'neutral');
+    if (pl > 0) plCard.classList.add('profit');
+    else if (pl < 0) plCard.classList.add('loss');
+    else plCard.classList.add('neutral');
+  }
+
+  // ── Render table ──
+  function renderTable() {
+    const wrap = document.getElementById('tableWrap');
+    const list = activeFilter === 'all' ? purchases : purchases.filter(p => p.type === activeFilter);
+
+    if (!list.length) {
+      wrap.innerHTML = `<div class="empty-state"><div class="icon">🏅</div><div>${activeFilter === 'all' ? 'Chưa có dữ liệu. Thêm lần mua vàng đầu tiên!' : 'Không có dữ liệu cho loại này.'}</div></div>`;
+      return;
+    }
+
+    const rows = list.map(p => {
+      const curPrice = currentPrices[p.type] || 0;
+      const invested = p.qty * p.buyPrice;
+      const current  = p.qty * curPrice;
+      const pl       = current - invested;
+      const pct      = invested ? ((pl / invested) * 100).toFixed(2) : 0;
+      const plClass  = pl > 0 ? 'profit-cell' : pl < 0 ? 'loss-cell' : 'neutral-cell';
+      const plSign   = pl >= 0 ? '+' : '';
+      const badgeClass = p.type === 'Mi Hồng' ? 'badge-mihong' : 'badge-pnj';
+
+      return `<tr>
+        <td><span class="badge ${badgeClass}">${p.type}</span></td>
+        <td style="text-align:right">${fmtNum(p.qty)}</td>
+        <td style="text-align:right">${fmtNum(p.buyPrice)} ₫</td>
+        <td style="text-align:right">${fmtNum(invested)} ₫</td>
+        <td style="text-align:right">${curPrice ? fmtNum(current) + ' ₫' : '<span class="neutral-cell">—</span>'}</td>
+        <td style="text-align:right" class="${plClass}">${curPrice ? plSign + fmtNum(Math.round(pl)) + ' ₫' : '—'}</td>
+        <td style="text-align:right" class="${plClass}">${curPrice ? plSign + pct + '%' : '—'}</td>
+        <td>
+          <button class="btn-ghost btn-sm" onclick="editPurchase('${p.id}')" title="Sửa">✏️</button>
+          <button class="btn-ghost btn-sm" onclick="confirmDelete('${p.id}')" title="Xóa">🗑</button>
+        </td>
+      </tr>`;
+    }).join('');
+
+    wrap.innerHTML = `<table>
+      <thead>
+        <tr>
+          <th>Loại</th>
+          <th style="text-align:right">Số lượng</th>
+          <th style="text-align:right">Giá mua/chỉ</th>
+          <th style="text-align:right">Vốn đã bỏ</th>
+          <th style="text-align:right">Giá trị HT</th>
+          <th style="text-align:right">Lời/Lỗ (₫)</th>
+          <th style="text-align:right">Lời/Lỗ (%)</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
+
+  function render() {
+    renderPriceInputs();
+    renderDashboard();
+    renderTable();
+  }
+
+  // ── Form ──
+  function resetForm() {
+    editingId = null;
+    document.getElementById('fType').value = 'Mi Hồng';
+    document.getElementById('fQty').value  = '';
+    document.getElementById('fPrice').value = '';
+    document.getElementById('fNote').value  = '';
+    document.getElementById('fPriceHint').style.display = 'none';
+    document.getElementById('formTitle').textContent = '➕ Thêm lần mua vàng';
+    document.getElementById('btnSave').textContent = '💾 Lưu';
+    document.getElementById('btnCancel').style.display = 'none';
+  }
+
+  function editPurchase(id) {
+    const p = purchases.find(x => x.id === id);
+    if (!p) return;
+    editingId = id;
+    document.getElementById('fType').value  = p.type;
+    document.getElementById('fQty').value   = p.qty;
+    document.getElementById('fPrice').value = p.buyPrice;
+    document.getElementById('fPriceHintVal').textContent = fmtNum(p.buyPrice) + ' ₫/chỉ';
+    document.getElementById('fPriceHint').style.display = 'inline-flex';
+    document.getElementById('fNote').value  = p.note || '';
+    document.getElementById('formTitle').textContent = '✏️ Sửa lần mua';
+    document.getElementById('btnSave').textContent   = '💾 Cập nhật';
+    document.getElementById('btnCancel').style.display = '';
+    document.getElementById('fType').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  document.getElementById('btnSave').addEventListener('click', () => {
+    const type  = document.getElementById('fType').value.trim();
+    const qty   = parseFloat(document.getElementById('fQty').value);
+    const priceRaw = parseFloat(document.getElementById('fPrice').value);
+    const price = parsePrice(priceRaw);
+    const note  = document.getElementById('fNote').value.trim();
+
+    if (!qty || qty <= 0)   { showToast('⚠️ Nhập số lượng hợp lệ'); return; }
+    if (!price || price <= 0) { showToast('⚠️ Nhập giá mua hợp lệ'); return; }
+
+    if (editingId) {
+      const idx = purchases.findIndex(p => p.id === editingId);
+      if (idx !== -1) purchases[idx] = { ...purchases[idx], type, qty, buyPrice: price, note };
+      showToast('✅ Đã cập nhật');
+    } else {
+      purchases.push({ id: uid(), type, qty, buyPrice: price, note });
+      showToast('✅ Đã thêm lần mua mới');
+    }
+
+    const savedType = type;
+    save(); resetForm(); render();
+    // Giữ lại loại vàng vừa chọn
+    document.getElementById('fType').value = savedType;
+  });
+
+  document.getElementById('btnCancel').addEventListener('click', () => {
+    resetForm();
+  });
+
+  // ── Delete modal ──
+  function confirmDelete(id) {
+    pendingDeleteId = id;
+    document.getElementById('deleteModal').classList.add('open');
+  }
+
+  document.getElementById('btnDeleteCancel').addEventListener('click', () => {
+    pendingDeleteId = null;
+    document.getElementById('deleteModal').classList.remove('open');
+  });
+
+  document.getElementById('btnDeleteConfirm').addEventListener('click', () => {
+    if (pendingDeleteId) {
+      purchases = purchases.filter(p => p.id !== pendingDeleteId);
+      save(); render(); showToast('🗑 Đã xóa');
+    }
+    pendingDeleteId = null;
+    document.getElementById('deleteModal').classList.remove('open');
+  });
+
+  // ── Filter tabs ──
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      activeFilter = tab.dataset.filter;
+      render();
+    });
+  });
+
+  // ── Current price inputs ──
+  ['priceMiHong', 'pricePNJ'].forEach(id => {
+    const isMH    = id === 'priceMiHong';
+    const hintEl  = document.getElementById(isMH ? 'hintMiHong' : 'hintPNJ');
+    const hintVal = document.getElementById(isMH ? 'hintMiHongVal' : 'hintPNJVal');
+    const labelBadge = document.getElementById(isMH ? 'labelBadgeMiHong' : 'labelBadgePNJ');
+    document.getElementById(id).addEventListener('input', e => {
+      const key = isMH ? 'Mi Hồng' : 'PNJ';
+      const raw = parseFloat(e.target.value) || 0;
+      const interpreted = parsePrice(raw);
+      currentPrices[key] = interpreted;
+      if (raw > 0 && interpreted !== raw) {
+        // shorthand — hiện badge xanh, ẩn badge vàng
+        hintVal.textContent = fmtNum(interpreted) + ' ₫/chỉ';
+        hintEl.style.display = 'inline-flex';
+        labelBadge.style.display = 'none';
+      } else {
+        hintEl.style.display = 'none';
+        labelBadge.style.display = 'inline-flex';
+      }
+      save(); render();
+    });
+  });
+
+  // ── fPrice hint ──
+  document.getElementById('fPrice').addEventListener('input', e => {
+    const raw = parseFloat(e.target.value) || 0;
+    const hint = document.getElementById('fPriceHint');
+    const hintVal = document.getElementById('fPriceHintVal');
+    if (raw > 0) {
+      const interpreted = parsePrice(raw);
+      hintVal.textContent = fmtNum(interpreted) + ' ₫/chỉ';
+      hint.style.display = 'inline-flex';
+    } else {
+      hint.style.display = 'none';
+    }
+  });
+
+  // ── Export ──
+  document.getElementById('btnExport').addEventListener('click', () => {
+    const data = { purchases, currentPrices, exportedAt: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `vang-data-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    showToast('⬇ Đã xuất file JSON');
+  });
+
+  // ── Import ──
+  document.getElementById('btnImport').addEventListener('click', async () => {
+    // Ưu tiên File System Access API (Chrome/Edge) để có thể tự ghi lại
+    if (window.showOpenFilePicker) {
+      try {
+        const [handle] = await window.showOpenFilePicker({
+          types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }],
+          multiple: false
+        });
+        const file = await handle.getFile();
+        const text = await file.text();
+        const data = JSON.parse(text);
+        if (!Array.isArray(data.purchases)) throw new Error('Invalid format');
+        pendingImportData = data;
+        pendingImportData._handle = handle;
+        document.getElementById('importModal').classList.add('open');
+      } catch (err) {
+        if (err.name !== 'AbortError') showToast('❌ File không hợp lệ', 3000);
+      }
+    } else {
+      // Fallback: input[type=file]
+      document.getElementById('fileInput').click();
+    }
+  });
+
+  document.getElementById('fileInput').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        pendingImportData = JSON.parse(ev.target.result);
+        if (!Array.isArray(pendingImportData.purchases)) throw new Error('Invalid format');
+        document.getElementById('importModal').classList.add('open');
+      } catch {
+        showToast('❌ File không hợp lệ', 3000);
+      }
+      e.target.value = '';
+    };
+    reader.readAsText(file);
+  });
+
+  document.getElementById('btnImportCancel').addEventListener('click', () => {
+    pendingImportData = null;
+    document.getElementById('importModal').classList.remove('open');
+  });
+
+  document.getElementById('btnImportConfirm').addEventListener('click', () => {
+    if (pendingImportData) {
+      purchases = pendingImportData.purchases || [];
+      if (pendingImportData.currentPrices) currentPrices = pendingImportData.currentPrices;
+      // Lưu file handle nếu có (File System Access API)
+      if (pendingImportData._handle) {
+        linkedFileHandle = pendingImportData._handle;
+        updateFileStatus();
+      }
+      save(); render(); showToast('✅ Import thành công! Mọi thay đổi sẽ tự lưu vào file.');
+    }
+    pendingImportData = null;
+    document.getElementById('importModal').classList.remove('open');
+  });
+
+  // ── Init ──
+  load();
+  render();
+</script>
+</body>
+</html>

@@ -1,8 +1,8 @@
 # Project State: Finance Tracker
 
 **Last Updated:** 2026-04-09
-**Current Phase:** Phase 1 — Executing Plan 2 (React Scaffold)
-**Overall Status:** 🟢 In Progress
+**Current Phase:** Phase 1 — Execute (blocked on GAS token verification)
+**Overall Status:** 🔴 Blocked
 
 ## Deployment Info
 
@@ -17,17 +17,39 @@
 ## Active Context
 
 ### What we just did
-- Initialized new project via `gsd-new-project`
-- Gathered requirements through user questioning
-- Completed domain research (STACK, FEATURES, ARCHITECTURE, PITFALLS, SUMMARY)
-- Defined 34 v1 requirements across 7 categories
-- Created 3-phase roadmap
+- React app fully scaffolded (Plans 2–6): login, home, balance cards, drawer, swipe-delete
+- GAS deployed with all 16 categories seeded
+- OAuth Client ID wired in
+- Login works ✅
+- **BLOCKER:** `verifyToken` in Code.gs throws "Token audience mismatch" — categories fail to load so the category grid is empty in the drawer
 
 ### Current focus
-**Ready to start Phase 1:** Core Entry & Sync
+Fix GAS `verifyToken` — the `aud` field in the token doesn't match CLIENT_ID.
 
-### What's next
-Run `/gsd-plan-phase 1` to generate the detailed execution plan for Phase 1.
+### Fix to apply next session
+In Code.gs `verifyToken`, the `aud` value from tokeninfo is the numeric project ID, not the OAuth client ID string. Two options:
+1. **Simplest:** Remove the `aud` check entirely (tokeninfo already validates authenticity)
+2. **Correct:** Log `info.aud` to see the actual value and match CLIENT_ID to it
+
+The updated `verifyToken` to paste into Code.gs:
+```javascript
+function verifyToken(idToken) {
+  const res = UrlFetchApp.fetch(
+    'https://oauth2.googleapis.com/tokeninfo?id_token=' + idToken,
+    { muteHttpExceptions: true }
+  );
+  const info = JSON.parse(res.getContentText());
+  if (info.error) throw new Error('Token invalid: ' + info.error);
+  return info.email;
+}
+```
+After saving → Deploy → New version → Deploy.
+
+### What's next after fix
+- Verify categories load in drawer ✅
+- Add a test transaction ✅
+- Confirm it appears in the list and Google Sheet ✅
+- Phase 1 complete → start Phase 2 (Dashboard & Charts)
 
 ---
 

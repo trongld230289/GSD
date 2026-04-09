@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuthStore, useAppStore } from '../store/useStore'
 import { apiGetTransactions, apiGetCategories } from '../api/gas'
 import { format } from 'date-fns'
@@ -21,13 +21,20 @@ export default function HomePage() {
     setLoadingTx,
   } = useAppStore()
 
-  // Load categories once
+  const [catError, setCatError] = useState<string | null>(null)
+
+  // Load categories once (always try if empty)
   useEffect(() => {
-    if (!idToken || categories.length > 0) return
+    if (!idToken) return
     apiGetCategories(idToken)
-      .then(setCategories)
-      .catch(console.error)
-  }, [idToken, categories.length, setCategories])
+      .then((cats) => {
+        if (cats.length > 0) setCategories(cats)
+      })
+      .catch((err) => {
+        console.error('Categories load failed:', err)
+        setCatError(String(err))
+      })
+  }, [idToken, setCategories])
 
   // Load transactions when month changes
   useEffect(() => {
@@ -63,6 +70,11 @@ export default function HomePage() {
         )}
       </div>
 
+      {catError && (
+        <div className="fixed top-16 left-0 right-0 mx-4 bg-red-100 border border-red-300 text-red-700 text-xs p-2 rounded-lg z-50">
+          API Error: {catError}
+        </div>
+      )}
       <FAB />
       <AddTransactionDrawer categories={categories} />
     </div>

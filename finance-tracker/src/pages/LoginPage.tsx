@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react'
 import { useAuthStore } from '../store/useStore'
 
-const GOOGLE_CLIENT_ID = '993101146522-hg4h22245evgi99fk60viflj7vk83gq0.apps.googleusercontent.com'
+const GOOGLE_CLIENT_ID = '993101146522-rn89slm3464o5d60qrq1hj5spf264vh8.apps.googleusercontent.com'
 
 declare global {
   interface Window {

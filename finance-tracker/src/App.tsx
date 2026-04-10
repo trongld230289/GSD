@@ -7,7 +7,7 @@ export default function App() {
   const { user } = useAuthStore()
 
   return (
-    <BrowserRouter basename="/finance-tracker">
+    <BrowserRouter basename="/GSD">
       <Routes>
         <Route
           path="/login"

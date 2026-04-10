@@ -1,40 +1,50 @@
 # Project State: Finance Tracker
 
-**Last Updated:** 2026-04-10
-**Current Phase:** Phase 2 — Dashboard & Analytics (ready to start)
-**Overall Status:** 🟢 Phase 1 Complete
+**Last Updated:** 2026-04-10 (end of day)
+**Current Phase:** Phase 1 — Verify remaining features, then start Phase 2
+**Overall Status:** 🟡 Phase 1 functionally complete, pending final verification tomorrow
 
 ## Deployment Info
 
 | Key | Value |
 |---|---|
 | GAS Web App URL | `https://script.google.com/macros/s/AKfycbxGdYKi_QY54tA8yZXOW1_XyBhv4NUa9ppQIzERUCYH_wbr-Y4EWII1aekUA9_6VwtI/exec` |
-| Google OAuth Client ID | `993101146522-hg4h22245evgi99fk60viflj7vk83gq0.apps.googleusercontent.com` |
-| GitHub Pages URL | ⏳ TODO — after hosting setup |
+| Google OAuth Client ID | `993101146522-rn89slm3464o5d60qrq1hj5spf264vh8.apps.googleusercontent.com` (Web client 2) |
+| GitHub Pages URL | ✅ LIVE — `https://trongld230289.github.io/GSD/` |
+| GitHub Repo | `https://github.com/trongld230289/GSD` |
+| Vite base | `/GSD/` |
+| BrowserRouter basename | `/GSD` |
 
 ---
 
 ## Active Context
 
-### What we just did
-- React app fully scaffolded (Plans 2–6): login, home, balance cards, drawer, swipe-delete
-- GAS deployed with all 16 categories seeded
-- OAuth Client ID wired in
-- Login works ✅
-- `verifyToken` aud check removed and redeployed ✅
-- **BLOCKER:** Categories still not loading after the fix — error persists. Root cause unknown, needs investigation next session.
+### What we completed today
+- Fixed GAS token audience mismatch ✅
+- Fixed `getCategories` bypassing token check ✅
+- Created new GAS deployment (new URL) to bust cache ✅
+- Fixed `addTransaction` — frontend now wraps tx in `{ data: tx }` ✅
+- Fixed `getTransactions` — splits `YYYY-MM` into `month=MM&year=YYYY` ✅
+- First transaction saved end-to-end ✅
+- GitHub Actions deploy workflow created ✅
+- App deployed to GitHub Pages ✅
+- App confirmed working on iPhone ✅
+- New OAuth client (Web client 2) created with `https://trongld230289.github.io` as authorized origin ✅
+- Updated `LoginPage.tsx` with new OAuth Client ID ✅
 
-### Fix to investigate next session
-Categories API call still returning error after removing `aud` check. Possible causes:
-1. GAS new deployment URL changed — check if redeploy created a new URL (old URL still cached in `src/api/gas.ts`)
-2. Token itself is malformed/expired — try signing out and back in first
-3. GAS `getCategories` function has a different bug — add `Logger.log(info)` in `verifyToken` to see full token payload
+### What to do FIRST tomorrow (before Phase 2)
+Run these 3 verification tests on the live iPhone app (`https://trongld230289.github.io/GSD/`):
 
-### What's next after fix
-- Verify categories load in drawer ✅
-- Add a test transaction ✅  
-- Confirm it appears in list and Google Sheet ✅
-- Phase 1 complete → start Phase 2 (Dashboard & Charts)
+1. **Swipe to delete** — swipe left on a transaction → red Delete button appears → tap → confirm → gone
+2. **Edit** — tap a transaction row → drawer opens pre-filled with existing values → change something → Save → updated in list
+3. **Month nav** — tap ‹ → March 2026 (empty) → tap › → back to April 2026 with transactions
+
+If any test fails, fix it before starting Phase 2.
+
+### Phase 2 scope (after verification)
+- Pie/donut chart of spending by category (Recharts)
+- 6-month income vs expense bar chart
+- New `/dashboard` route accessible from header/nav
 
 ---
 
@@ -42,7 +52,7 @@ Categories API call still returning error after removing `aud` check. Possible c
 
 | Phase | Status | Started | Completed |
 |---|---|---|---|
-| Phase 1: Core Entry & Sync | 🔲 Pending | — | — |
+| Phase 1: Core Entry & Sync | � Verify | 2026-04-10 | Pending final test |
 | Phase 2: Dashboard & Analytics | 🔲 Pending | — | — |
 | Phase 3: Mobile Polish & Export | 🔲 Pending | — | — |
 

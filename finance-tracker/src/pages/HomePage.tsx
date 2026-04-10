@@ -23,18 +23,12 @@ export default function HomePage() {
 
   const [catError, setCatError] = useState<string | null>(null)
 
-  // Load categories once (always try if empty)
+  // Load categories once (no auth needed — categories are global)
   useEffect(() => {
-    if (!idToken) return
-    apiGetCategories(idToken)
-      .then((cats) => {
-        if (cats.length > 0) setCategories(cats)
-      })
-      .catch((err) => {
-        console.error('Categories load failed:', err)
-        setCatError(String(err))
-      })
-  }, [idToken, setCategories])
+    apiGetCategories()
+      .then((cats) => { if (cats.length > 0) setCategories(cats) })
+      .catch((err) => { console.error('Categories load failed:', err); setCatError(String(err)) })
+  }, [setCategories])
 
   // Load transactions when month changes
   useEffect(() => {

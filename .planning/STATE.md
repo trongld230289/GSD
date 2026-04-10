@@ -8,7 +8,7 @@
 
 | Key | Value |
 |---|---|
-| GAS Web App URL | `https://script.google.com/macros/s/AKfycbysl0gDewDC6fr-7eiqpO0nlK5olVbNyy5DnGghkSSpDdQcB01MHOy3XLCrSUYo66Ui/exec` |
+| GAS Web App URL | `https://script.google.com/macros/s/AKfycbxGdYKi_QY54tA8yZXOW1_XyBhv4NUa9ppQIzERUCYH_wbr-Y4EWII1aekUA9_6VwtI/exec` |
 | Google OAuth Client ID | `993101146522-hg4h22245evgi99fk60viflj7vk83gq0.apps.googleusercontent.com` |
 | GitHub Pages URL | ⏳ TODO — after hosting setup |
 

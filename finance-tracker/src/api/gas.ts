@@ -1,7 +1,7 @@
 import type { Category, GasResponse, Transaction } from '../types'
 
 const GAS_URL =
-  'https://script.google.com/macros/s/AKfycbysl0gDewDC6fr-7eiqpO0nlK5olVbNyy5DnGghkSSpDdQcB01MHOy3XLCrSUYo66Ui/exec'
+  'https://script.google.com/macros/s/AKfycbxGdYKi_QY54tA8yZXOW1_XyBhv4NUa9ppQIzERUCYH_wbr-Y4EWII1aekUA9_6VwtI/exec'
 
 // GAS requires Content-Type: text/plain to avoid CORS preflight on POST
 async function gasPost<T>(
@@ -27,10 +27,8 @@ async function gasGet<T>(params: Record<string, string>): Promise<GasResponse<T>
 
 // ─── Categories ───────────────────────────────────────────────────────────────
 
-export async function apiGetCategories(
-  token: string
-): Promise<Category[]> {
-  const res = await gasGet<Category[]>({ action: 'getCategories', token })
+export async function apiGetCategories(): Promise<Category[]> {
+  const res = await gasGet<Category[]>({ action: 'getCategories' })
   if (!res.ok) throw new Error(res.error ?? 'Failed to load categories')
   return res.data ?? []
 }
@@ -41,10 +39,12 @@ export async function apiGetTransactions(
   token: string,
   month: string  // YYYY-MM
 ): Promise<Transaction[]> {
+  const [year, mon] = month.split('-')
   const res = await gasGet<Transaction[]>({
     action: 'getTransactions',
     token,
-    month,
+    month: mon,
+    year,
   })
   if (!res.ok) throw new Error(res.error ?? 'Failed to load transactions')
   return res.data ?? []
@@ -54,18 +54,25 @@ export async function apiAddTransaction(
   token: string,
   tx: Omit<Transaction, 'id' | 'created_at' | 'user_email'>
 ): Promise<Transaction> {
-  const res = await gasPost<Transaction>({ action: 'addTransaction', token, ...tx })
+  const res = await gasPost<{ id: string; success: boolean }>({ action: 'addTransaction', token, data: tx })
   if (!res.ok || !res.data) throw new Error(res.error ?? 'Failed to add transaction')
-  return res.data
+  // GAS returns {id, success} — reconstruct full transaction for local state
+  return {
+    ...tx,
+    id: res.data.id,
+    created_at: new Date().toISOString(),
+    user_email: '',
+  } as Transaction
 }
 
 export async function apiUpdateTransaction(
   token: string,
   tx: Pick<Transaction, 'id' | 'date' | 'type' | 'category_id' | 'amount' | 'note'>
 ): Promise<Transaction> {
-  const res = await gasPost<Transaction>({ action: 'updateTransaction', token, ...tx })
+  const res = await gasPost<{ success: boolean }>({ action: 'updateTransaction', token, data: tx })
   if (!res.ok || !res.data) throw new Error(res.error ?? 'Failed to update transaction')
-  return res.data
+  // GAS returns {success} — reconstruct from input for local state
+  return tx as unknown as Transaction
 }
 
 export async function apiDeleteTransaction(

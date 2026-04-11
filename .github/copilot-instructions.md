@@ -10,12 +10,15 @@
 ## Finance Tracker — Project Rules
 
 ### Phase Test Suite Gate
-Before declaring any phase complete and moving to the next phase, ALWAYS:
-1. Ask the user: "Have you completed smoke testing of all main features in Phase [X]? If yes, I'll create the manual test suite before we move on."
-2. Wait for confirmation.
-3. Once confirmed, create `.tests/phase-[N]-manual-tests.md` covering all requirements from that phase — group by feature area, include step-by-step test cases and a regression checklist.
-4. Commit and push the test file.
-5. Only then proceed to the next phase.
+**Immediately after pushing the last execution commit**, ALWAYS:
+1. List the main features/flows to smoke test (so the user knows what to test).
+2. Ask the user to smoke test on device and report any bugs.
+3. Fix any reported bugs; repeat until the user confirms all clear.
+4. Write `NN-SUMMARY.md` — now that outcome is verified, capture what was actually built including any fixes.
+5. Ask: "Ready for me to create the manual test suite?"
+6. Once confirmed, create `.tests/phase-[N]-manual-tests.md` covering all requirements from that phase — group by feature area, include step-by-step test cases and a regression checklist.
+7. Commit and push the summary + test file.
+8. Only then proceed to the next phase.
 
 Test suite files live in `.tests/` and are named `phase-1-manual-tests.md`, `phase-2-manual-tests.md`, etc.
 
@@ -31,7 +34,7 @@ NN-SUMMARY.md      ← written AFTER execution completes (what was built, files 
 
 Rules:
 - CONTEXT + RESEARCH must be created **before** writing any PLAN files
-- SUMMARY is written **after all plans are executed** — captures actual outcome, not intended
+- SUMMARY is written **after smoke testing is confirmed** (not just after execution) — captures actual outcome including any fixes made during smoke testing, not intended outcome
 - SUMMARY replaces UAT.md — user testing is tracked in `.tests/phase-N-manual-tests.md` instead
 - If a file was missed in a previous session, create it retroactively before continuing
 <!-- /GSD Configuration -->

@@ -99,12 +99,12 @@ export const CATEGORY_META: CategoryMeta[] = [
   },
   {
     id: 'food',
-    name: 'Food',
+    name: 'Food & Drink',
     type: 'expense',
     icon: '🍜',
     color: '#F97316',   // orange
     sort_order: 6,
-    description: 'Groceries, dining out, coffee, and work lunches.',
+    description: 'Meals, snacks, cafes, and work lunches.',
   },
   {
     id: 'health',
@@ -134,13 +134,13 @@ export const CATEGORY_META: CategoryMeta[] = [
     description: 'Personal spending: Shopping, travel, gym, and pets.',
   },
   {
-    id: 'taxes-ins',
-    name: 'Taxes & Ins.',
+    id: 'groceries',
+    name: 'Groceries',
     type: 'expense',
-    icon: '📋',
+    icon: '🛒',
     color: '#64748B',   // slate
     sort_order: 10,
-    description: 'Income tax, life insurance, and vehicle insurance.',
+    description: 'Supermarket trips, fresh food, and home supplies.',
   },
   {
     id: 'debt',

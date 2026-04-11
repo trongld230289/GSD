@@ -61,7 +61,7 @@ export async function apiAddTransaction(
   token: string,
   tx: Omit<Transaction, 'id' | 'created_at' | 'user_email'>
 ): Promise<Transaction> {
-  const res = await gasPost<{ id: string; success: boolean }>({ action: 'addTransaction', token, data: tx })
+  const res = await gasPost<{ id: string; success: boolean }>({ action: 'addTransaction', token, ...tx })
   if (!res.ok || !res.data) throw new Error(res.error ?? 'Failed to add transaction')
   // GAS returns {id, success} — reconstruct full transaction for local state
   return {

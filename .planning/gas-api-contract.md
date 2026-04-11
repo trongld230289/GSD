@@ -94,6 +94,8 @@ Transaction { id, date, type, category_id, amount, note, created_at, user_email 
 
 **Response:** `{ ok: true, data: { success: boolean } }`
 
+> ⚠️ **Past bug (Phase 2):** Client sent `{ action, token, data: tx }` (nested). GAS reads `params.id`, `params.type`, etc. at top level — all were `undefined`, so nothing was written to the sheet. Fixed to `{ action, token, ...tx }` flat spread.
+
 ---
 
 ### `deleteTransaction` — POST

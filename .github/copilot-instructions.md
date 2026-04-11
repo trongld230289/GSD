@@ -18,4 +18,20 @@ Before declaring any phase complete and moving to the next phase, ALWAYS:
 5. Only then proceed to the next phase.
 
 Test suite files live in `.tests/` and are named `phase-1-manual-tests.md`, `phase-2-manual-tests.md`, etc.
+
+### Phase Folder Structure
+Every phase folder under `.planning/phases/NN-phase-name/` MUST contain these files — never skip any:
+
+```
+NN-CONTEXT.md      ← decisions captured during Discuss step (before planning)
+NN-RESEARCH.md     ← research findings (technology choices, API constraints, codebase analysis)
+NN-PLAN-NN-name.md ← one file per execution plan (as many as needed)
+NN-SUMMARY.md      ← written AFTER execution completes (what was built, files changed, deviations from plan)
+```
+
+Rules:
+- CONTEXT + RESEARCH must be created **before** writing any PLAN files
+- SUMMARY is written **after all plans are executed** — captures actual outcome, not intended
+- SUMMARY replaces UAT.md — user testing is tracked in `.tests/phase-N-manual-tests.md` instead
+- If a file was missed in a previous session, create it retroactively before continuing
 <!-- /GSD Configuration -->

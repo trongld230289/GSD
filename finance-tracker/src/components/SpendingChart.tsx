@@ -41,7 +41,7 @@ export default function SpendingChart({ transactions, categories }: Props) {
     catId,
     amount,
     name: catMap.get(catId)?.name ?? 'Other',
-    color: PALETTE[i % PALETTE.length],
+    color: catMap.get(catId)?.color ?? PALETTE[i % PALETTE.length],
     pct: Math.round((amount / total) * 100),
   }))
 

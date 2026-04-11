@@ -4,6 +4,7 @@ import { useAuthStore, useAppStore } from '../store/useStore'
 import { apiAddTransaction, apiUpdateTransaction } from '../api/gas'
 import { todayISO, normalizeDate } from '../utils/date'
 import { formatVND, parseVNDInput } from '../utils/format'
+import { CATEGORY_META_MAP } from '../data/categories'
 
 interface Props {
   categories: Category[]
@@ -192,9 +193,27 @@ export default function AddTransactionDrawer({ categories }: Props) {
                   </button>
                 ))}
             </div>
+
+            {/* Category description tip */}
+            {categoryId && CATEGORY_META_MAP[categoryId] && (
+              <div
+                className="mt-2 px-3 py-2 rounded-xl text-xs text-gray-700 flex items-start gap-2"
+                style={{ backgroundColor: (CATEGORY_META_MAP[categoryId].color) + '18' }}
+              >
+                <span className="text-base leading-none mt-0.5">
+                  {CATEGORY_META_MAP[categoryId].icon}
+                </span>
+                <span>
+                  <span className="font-semibold" style={{ color: CATEGORY_META_MAP[categoryId].color }}>
+                    {CATEGORY_META_MAP[categoryId].name}:{' '}
+                  </span>
+                  {CATEGORY_META_MAP[categoryId].description}
+                </span>
+              </div>
+            )}
           </div>
 
-          {/* Date + Note row */}
+          {/* Date + Note row */
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-xs text-gray-500 mb-1 block">Date</label>

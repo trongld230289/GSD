@@ -76,7 +76,7 @@ export async function apiUpdateTransaction(
   token: string,
   tx: Pick<Transaction, 'id' | 'date' | 'type' | 'category_id' | 'amount' | 'note'>
 ): Promise<Transaction> {
-  const res = await gasPost<{ success: boolean }>({ action: 'updateTransaction', token, data: tx })
+  const res = await gasPost<{ success: boolean }>({ action: 'updateTransaction', token, ...tx })
   if (!res.ok || !res.data) throw new Error(res.error ?? 'Failed to update transaction')
   // GAS returns {success} — reconstruct from input for local state
   return tx as unknown as Transaction

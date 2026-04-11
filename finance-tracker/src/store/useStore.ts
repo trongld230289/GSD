@@ -31,6 +31,7 @@ interface AppStore {
   isLoadingTx: boolean
   isDrawerOpen: boolean
   editingTransaction: Transaction | null
+  txCache: Record<string, Transaction[]>
 
   setTransactions: (txs: Transaction[]) => void
   addTransaction: (tx: Transaction) => void
@@ -41,6 +42,8 @@ interface AppStore {
   setLoadingTx: (v: boolean) => void
   openDrawer: (tx?: Transaction) => void
   closeDrawer: () => void
+  setCachedTransactions: (month: string, txs: Transaction[]) => void
+  invalidateCache: (month: string) => void
 }
 
 export const useAppStore = create<AppStore>((set) => ({
@@ -50,6 +53,7 @@ export const useAppStore = create<AppStore>((set) => ({
   isLoadingTx: false,
   isDrawerOpen: false,
   editingTransaction: null,
+  txCache: {},
 
   setTransactions: (transactions) => set({ transactions }),
   addTransaction: (tx) =>
@@ -67,4 +71,11 @@ export const useAppStore = create<AppStore>((set) => ({
     set({ isDrawerOpen: true, editingTransaction: tx ?? null }),
   closeDrawer: () =>
     set({ isDrawerOpen: false, editingTransaction: null }),
+  setCachedTransactions: (month, txs) =>
+    set((s) => ({ txCache: { ...s.txCache, [month]: txs } })),
+  invalidateCache: (month) =>
+    set((s) => {
+      const { [month]: _, ...rest } = s.txCache
+      return { txCache: rest }
+    }),
 }))

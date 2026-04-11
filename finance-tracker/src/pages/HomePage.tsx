@@ -8,6 +8,8 @@ import TransactionList from '../components/TransactionList'
 import FAB from '../components/FAB'
 import AddTransactionDrawer from '../components/AddTransactionDrawer'
 import Header from '../components/Header'
+import BottomNav from '../components/BottomNav'
+import SpendingChart from '../components/SpendingChart'
 
 export default function HomePage() {
   const { user, idToken, clearUser } = useAuthStore()
@@ -19,6 +21,8 @@ export default function HomePage() {
     setTransactions,
     setCategories,
     setLoadingTx,
+    txCache,
+    setCachedTransactions,
   } = useAppStore()
 
   const [catError, setCatError] = useState<string | null>(null)
@@ -30,16 +34,32 @@ export default function HomePage() {
       .catch((err) => { console.error('Categories load failed:', err); setCatError(String(err)) })
   }, [setCategories])
 
-  // Load transactions when month changes
+  // Load transactions when month changes — use cache if available
   useEffect(() => {
     if (!idToken) return
-    setLoadingTx(true)
     const month = format(currentMonth, 'yyyy-MM')
+    if (txCache[month]) {
+      setTransactions(txCache[month])
+      return
+    }
+    setLoadingTx(true)
     apiGetTransactions(idToken, month)
-      .then(setTransactions)
+      .then((txs) => {
+        setTransactions(txs)
+        setCachedTransactions(month, txs)
+      })
       .catch(console.error)
       .finally(() => setLoadingTx(false))
-  }, [idToken, currentMonth, setTransactions, setLoadingTx])
+  }, [idToken, currentMonth])
+
+  const currentMonthKey = format(currentMonth, 'yyyy-MM')
+
+  // Keep cache in sync whenever transactions change (add / edit / delete)
+  useEffect(() => {
+    if (!isLoadingTx) {
+      setCachedTransactions(currentMonthKey, transactions)
+    }
+  }, [transactions, isLoadingTx])
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col max-w-md mx-auto relative">
@@ -48,6 +68,10 @@ export default function HomePage() {
       <div className="flex-1 overflow-y-auto pb-24">
         <MonthNav />
         <BalanceSummary transactions={transactions} />
+
+        {!isLoadingTx && (
+          <SpendingChart transactions={transactions} categories={categories} />
+        )}
 
         {isLoadingTx ? (
           <div className="flex justify-center py-12">
@@ -71,6 +95,7 @@ export default function HomePage() {
       )}
       <FAB />
       <AddTransactionDrawer categories={categories} />
+      <BottomNav />
     </div>
   )
 }

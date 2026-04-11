@@ -28,6 +28,12 @@ export interface MonthlyBalance {
   net: number
 }
 
+export interface MonthlyTotals {
+  month: string   // "YYYY-MM"
+  income: number
+  expense: number
+}
+
 // ─── Store Shape ──────────────────────────────────────────────────────────────
 
 export interface AuthState {

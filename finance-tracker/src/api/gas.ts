@@ -1,7 +1,14 @@
-import type { Category, GasResponse, Transaction } from '../types'
+import type { Category, GasResponse, MonthlyTotals, Transaction } from '../types'
+import { format, subMonths } from 'date-fns'
+
+export function lastNMonths(n: number): string[] {
+  return Array.from({ length: n }, (_, i) =>
+    format(subMonths(new Date(), i), 'yyyy-MM')
+  )
+}
 
 const GAS_URL =
-  'https://script.google.com/macros/s/AKfycbxGdYKi_QY54tA8yZXOW1_XyBhv4NUa9ppQIzERUCYH_wbr-Y4EWII1aekUA9_6VwtI/exec'
+  'https://script.google.com/macros/s/AKfycbx7NcOGdYgPjTc0UetmluXlc1g2wEzy2Xk8raL-7bH4y9R9m7uCQq1bU4PyRLfEamzX/exec'
 
 // GAS requires Content-Type: text/plain to avoid CORS preflight on POST
 async function gasPost<T>(
@@ -81,4 +88,19 @@ export async function apiDeleteTransaction(
 ): Promise<void> {
   const res = await gasPost<void>({ action: 'deleteTransaction', token, id })
   if (!res.ok) throw new Error(res.error ?? 'Failed to delete transaction')
+}
+
+// ─── Monthly Totals ───────────────────────────────────────────────────────────
+
+export async function apiGetMonthlyTotals(
+  token: string,
+  months: string[]  // ["YYYY-MM", ...]
+): Promise<MonthlyTotals[]> {
+  const res = await gasGet<MonthlyTotals[]>({
+    action: 'getMonthlyTotals',
+    token,
+    months: months.join(','),
+  })
+  if (!res.ok) throw new Error(res.error ?? 'Failed to load monthly totals')
+  return res.data ?? []
 }

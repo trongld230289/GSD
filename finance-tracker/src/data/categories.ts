@@ -65,7 +65,7 @@ export const CATEGORY_META: CategoryMeta[] = [
     id: 'giving',
     name: 'Giving',
     type: 'expense',
-    icon: '🤲',
+    icon: '🙏',
     color: '#EC4899',   // hot pink
     sort_order: 2,
     description: 'Donations, charity, and gifts for special occasions.',
@@ -83,7 +83,7 @@ export const CATEGORY_META: CategoryMeta[] = [
     id: 'furniture',
     name: 'Furniture',
     type: 'expense',
-    icon: '🛋️',
+    icon: '🪑',
     color: '#F59E0B',   // amber
     sort_order: 4,
     description: 'Big purchases: Furniture, home appliances, and decor.',

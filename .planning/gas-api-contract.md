@@ -133,3 +133,30 @@ MonthlyTotals { month: "YYYY-MM", income: number, expense: number }
 3. Implement `gasGet()` or `gasPost()` call in `src/api/gas.ts` following the table exactly.
 4. Cross-check: every field the GAS handler reads via `params.X` must exist at the **top level** of the client payload.
 5. Create a new GAS deployment and update `GAS_URL` in `src/api/gas.ts`.
+
+---
+
+## Lesson Learned: Date Handling in GAS/Sheets
+
+### The Problem
+Google Sheets auto-converts any date-like string written to a cell into an internal **Date object** (unless the cell is explicitly formatted as Plain Text). When GAS reads that cell back via `getValues()` and serializes it to JSON, it outputs a locale/timezone-dependent string like:
+```
+"Fri Apr 09 2026 07:00:00 GMT+0700"
+```
+…instead of the clean `"2026-04-10"` you originally stored. This causes two classes of bug:
+
+1. **Wrong date displayed / stored** — `"2026-04-10"` written as a Date cell is interpreted as UTC midnight, which shifts to April 9 in timezones behind UTC (e.g. UTC-5) or can shift forward in UTC+7 depending on how Sheets applies the timezone.
+2. **Broken grouping/sorting on the client** — two transactions on the same day return two different raw date strings → `groupByDate` creates two separate groups → duplicate date headers in the list.
+
+### The Fix
+
+**In GAS**, always serialize dates using `Utilities.formatDate` when reading from a sheet:
+```javascript
+date: Utilities.formatDate(new Date(row[1]), Session.getScriptTimeZone(), "yyyy-MM-dd")
+```
+This works correctly whether the cell holds a Date object or a plain text string, and always returns `YYYY-MM-DD` in the sheet's local timezone. Since you own both GAS and the client, fixing at the source is sufficient — no client-side normalization needed.
+
+### Rules going forward
+- **Any GAS function that reads a date column** must serialize using `Utilities.formatDate(new Date(row[N]), Session.getScriptTimeZone(), "yyyy-MM-dd")` — never return `row[N]` raw. This is the authoritative fix — fix at the source.
+- Since you own both the GAS backend and the client, fixing in GAS is sufficient. Client-side normalization (`normalizeDate`) is redundant when the contract guarantees `YYYY-MM-DD` from GAS, and adds unnecessary code to maintain.
+- **Never rely on Sheets cell format** (plain text vs Date) as a correctness guarantee — the GAS serialization layer must always be explicit.

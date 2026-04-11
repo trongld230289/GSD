@@ -47,4 +47,31 @@ Any phase that adds or modifies a GAS API action MUST follow this sequence — n
 4. After implementation, verify the contract file is up-to-date before closing the phase.
 
 > **Why this rule exists:** In Phase 2, `apiAddTransaction` sent `{ action, token, data: tx }` while GAS read `params.type` directly — the nested `data` key meant all transaction fields were `undefined`, creating rows with only id + timestamp. The contract file makes the wire format explicit and prevents this class of bug.
+
+### GAS Code Review Rule
+Before writing or suggesting **any** new or modified GAS function:
+
+1. **Read the full `Code.gs`** — check what patterns are already established: how the spreadsheet is accessed (`getActive()` vs `openById()`), how dates are read, how errors are returned.
+2. **Never write GAS code in isolation** — every new function must be consistent with the existing ones.
+3. **After writing a GAS function**, run through this checklist before finalizing:
+   - [ ] All variables referenced are declared in the same scope
+   - [ ] Spreadsheet access matches the pattern used by all other functions
+   - [ ] Every date column read uses `Utilities.formatDate(new Date(row[N]), Session.getScriptTimeZone(), "yyyy-MM-dd")` — not `String(row[N])` or raw `row[N]`
+   - [ ] No undefined constants (e.g. `SPREADSHEET_ID`) unless declared at the top of the file
+4. **Ask the user to paste the relevant section of `Code.gs`** if you don't already have it — never guess at patterns.
+
+> **Why this rule exists:** In Phase 2, three bugs were introduced in GAS functions written without reading the full file — `newRow` variable referenced before declaration, `SPREADSHEET_ID` used instead of `getActive()`, and `String(row[1]).slice(0,7)` used for date parsing (returns `"Fri Apr"` for Date objects, not `"2026-04"`). All three were avoidable by reading the existing code first.
+
+### GAS Date Handling Rule
+Google Sheets auto-converts date strings into internal Date objects. When GAS reads them back, the raw cell value serializes inconsistently (e.g. `"Fri Apr 09 2026 07:00:00 GMT+0700"`) causing wrong dates and broken grouping on the client.
+
+**One rule — fix at the source in GAS:**
+
+**In every GAS function that reads a date column**, always serialize using:
+   ```javascript
+   Utilities.formatDate(new Date(row[N]), Session.getScriptTimeZone(), "yyyy-MM-dd")
+   ```
+   Never return `row[N]` raw for any date field. Since you own both GAS and the client, fixing at the source is sufficient — no client-side normalization needed.
+
+> **Why this rule exists:** Sheets stored the date as a Date object; GAS returned `"Fri Apr 09 2026 07:00:00 GMT+0700"`; the client used the raw string as a grouping key — two transactions on the same day landed in two groups → duplicate date headers. The timezone shift also caused April 10 to appear as April 9 in the sheet.
 <!-- /GSD Configuration -->

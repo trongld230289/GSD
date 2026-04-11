@@ -56,9 +56,10 @@ export function groupByDate<T extends { date: string }>(
 ): Array<{ date: string; items: T[] }> {
   const map = new Map<string, T[]>()
   for (const item of items) {
-    const group = map.get(item.date) ?? []
+    const key = item.date
+    const group = map.get(key) ?? []
     group.push(item)
-    map.set(item.date, group)
+    map.set(key, group)
   }
   return Array.from(map.entries())
     .map(([date, items]) => ({ date, items }))

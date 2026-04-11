@@ -44,7 +44,7 @@ export default function ReportsPage() {
   const { user, idToken, clearUser } = useAuthStore()
   const { categories, currentMonth, txCache, setCachedTransactions } = useAppStore()
 
-  const [trendRange, setTrendRange] = useState<1 | 3 | 6 | 12>(6)
+  const [trendRange, setTrendRange] = useState<3 | 6 | 12>(6)
   const [monthlyTotals, setMonthlyTotals] = useState<MonthlyTotals[]>([])
   const [isLoadingChart, setIsLoadingChart] = useState(true)
   const [chartError, setChartError] = useState<string | null>(null)
@@ -87,7 +87,7 @@ export default function ReportsPage() {
   const catMap = new Map(categories.map((c) => [c.id, c]))
   const breakdown = buildBreakdown(monthTxs, catMap)
 
-  const trendLabel: Record<number, string> = { 1: '1-Month', 3: '3-Month', 6: '6-Month', 12: '1-Year' }
+  const trendLabel: Record<number, string> = { 3: '3-Month', 6: '6-Month', 12: '1-Year' }
 
   const chartData = monthlyTotals.map((d) => ({
     ...d,
@@ -108,7 +108,7 @@ export default function ReportsPage() {
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-semibold text-gray-700">{trendLabel[trendRange]} Trend</h3>
             <div className="flex gap-1">
-              {([1, 3, 6, 12] as const).map((n) => (
+              {([3, 6, 12] as const).map((n) => (
                 <button
                   key={n}
                   onClick={() => setTrendRange(n)}

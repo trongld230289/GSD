@@ -8,19 +8,21 @@
 ## What Was Built
 
 ### New Features
-- **Donut chart on Home screen** — shows current month's expense breakdown by category with a 12-color distinct palette
+- **Donut chart on Home screen** — shows current month's expense breakdown by category; each slice uses the category's own distinct color
 - **Bottom navigation bar** — Home / Reports tabs
 - **Reports page** — bar chart trend (3M / 6M / 1Y selector) + spending category breakdown
 - **Session cache in Zustand store** — monthly totals cached to avoid redundant GAS calls within the same session
+- **Category redesign** — 16 new categories (4 income + 12 expense) replacing the original set; category picker shows a description tip when a category is selected
 
 ### Files Created
 | File | Purpose |
 |---|---|
-| `src/components/SpendingChart.tsx` | Recharts donut + bar chart, 12-color PALETTE array |
+| `src/components/SpendingChart.tsx` | Recharts donut + bar chart; colors from category data, PALETTE as fallback |
 | `src/components/BottomNav.tsx` | Tab bar, Home / Reports icons |
 | `src/pages/ReportsPage.tsx` | Trend chart + breakdown, trendRange state (3\|6\|12) |
 | `src/api/gas.ts` (additions) | `apiGetMonthlyTotals`, `lastNMonths` helper |
 | `src/store/useStore.ts` (additions) | `monthlyTotals` cache, `fetchMonthlyTotals` action |
+| `src/data/categories.ts` | Static category metadata — ids, colors, icons, description tips |
 
 ### Files Modified
 | File | Change |
@@ -77,7 +79,9 @@
 
 - **1M trend option removed** — user found 1-month bar chart unhelpful; kept 3M/6M/1Y
 - **Error state added to ReportsPage** — `chartError` state shows visible message if fetch fails (not in original plan)
-- **SpendingChart colors** — original plan used category `.color` field; replaced with a fixed 12-color PALETTE array to ensure visual distinction
+- **SpendingChart colors** — original plan used a fixed palette by sort index; changed to use each category's own `.color` field for consistency with the picker; PALETTE kept as fallback for unknown categories
+- **Category redesign post-smoke-test** — original 16 categories replaced with a new set better matching actual usage: Salary / Bonus / Side Income / Gifts (income) + Savings / Giving / Housing / Furniture / Transport / Food & Drink / Health / Personal Dev. / Lifestyle / Groceries / Debt / Others (expense)
+- **Description tips in picker** — not in original plan; added as UX improvement so users can quickly identify the right category; stored as static data in `src/data/categories.ts` (no GAS change needed)
 
 ---
 

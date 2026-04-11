@@ -2,6 +2,22 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import type { Category, Transaction } from '../types'
 import { formatVND } from '../utils/format'
 
+// 12 perceptually-distinct colours — positioned far apart on the colour wheel
+const PALETTE = [
+  '#3B82F6', // blue
+  '#F97316', // orange
+  '#22C55E', // green
+  '#EF4444', // red
+  '#A855F7', // purple
+  '#EAB308', // yellow
+  '#06B6D4', // cyan
+  '#EC4899', // pink
+  '#14B8A6', // teal
+  '#F59E0B', // amber
+  '#6366F1', // indigo
+  '#84CC16', // lime
+]
+
 interface Props {
   transactions: Transaction[]
   categories: Category[]
@@ -19,15 +35,15 @@ export default function SpendingChart({ transactions, categories }: Props) {
     grouped[tx.category_id] = (grouped[tx.category_id] ?? 0) + tx.amount
   }
 
-  const data = Object.entries(grouped)
-    .map(([catId, amount]) => ({
-      catId,
-      amount,
-      name: catMap.get(catId)?.name ?? 'Other',
-      color: catMap.get(catId)?.color ?? '#9CA3AF',
-      pct: Math.round((amount / total) * 100),
-    }))
-    .sort((a, b) => b.amount - a.amount)
+  const sorted = Object.entries(grouped).sort((a, b) => b[1] - a[1])
+
+  const data = sorted.map(([catId, amount], i) => ({
+    catId,
+    amount,
+    name: catMap.get(catId)?.name ?? 'Other',
+    color: PALETTE[i % PALETTE.length],
+    pct: Math.round((amount / total) * 100),
+  }))
 
   return (
     <div className="mx-4 my-3 bg-white rounded-2xl p-4">

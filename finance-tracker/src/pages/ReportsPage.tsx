@@ -44,21 +44,27 @@ export default function ReportsPage() {
   const { user, idToken, clearUser } = useAuthStore()
   const { categories, currentMonth, txCache, setCachedTransactions } = useAppStore()
 
+  const [trendRange, setTrendRange] = useState<1 | 3 | 6 | 12>(6)
   const [monthlyTotals, setMonthlyTotals] = useState<MonthlyTotals[]>([])
   const [isLoadingChart, setIsLoadingChart] = useState(true)
+  const [chartError, setChartError] = useState<string | null>(null)
   const [monthTxs, setMonthTxs] = useState<Transaction[]>([])
   const [isLoadingBreakdown, setIsLoadingBreakdown] = useState(false)
 
-  // Fetch 6-month totals once on mount
+  // Re-fetch whenever idToken or trendRange changes
   useEffect(() => {
     if (!idToken) return
-    const months = lastNMonths(6)
+    const months = lastNMonths(trendRange)
     setIsLoadingChart(true)
+    setChartError(null)
     apiGetMonthlyTotals(idToken, months)
-      .then((data) => setMonthlyTotals([...data].reverse())) // oldest first for chart
-      .catch(console.error)
+      .then((data) => setMonthlyTotals([...data].reverse()))
+      .catch((err) => {
+        console.error('getMonthlyTotals failed:', err)
+        setChartError(err instanceof Error ? err.message : String(err))
+      })
       .finally(() => setIsLoadingChart(false))
-  }, [idToken])
+  }, [idToken, trendRange])
 
   // Fetch current month transactions for breakdown (with cache)
   useEffect(() => {
@@ -81,9 +87,14 @@ export default function ReportsPage() {
   const catMap = new Map(categories.map((c) => [c.id, c]))
   const breakdown = buildBreakdown(monthTxs, catMap)
 
+  const trendLabel: Record<number, string> = { 1: '1-Month', 3: '3-Month', 6: '6-Month', 12: '1-Year' }
+
   const chartData = monthlyTotals.map((d) => ({
     ...d,
-    label: format(new Date(d.month + '-01'), 'MMM'),
+    // For 12-month range show "Jan '25" to distinguish years; otherwise just "Jan"
+    label: trendRange === 12
+      ? format(new Date(d.month + '-01'), "MMM ''yy")
+      : format(new Date(d.month + '-01'), 'MMM'),
   }))
 
   return (
@@ -91,18 +102,45 @@ export default function ReportsPage() {
       <Header user={user} onSignOut={clearUser} />
 
       <div className="flex-1 overflow-y-auto pb-24">
-        {/* 6-month trend bar chart */}
+        {/* Trend bar chart */}
         <div className="mx-4 mt-4 bg-white rounded-2xl p-4">
-          <h3 className="text-sm font-semibold text-gray-700 mb-3">6-Month Trend</h3>
+          {/* Header row: title + range pills */}
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold text-gray-700">{trendLabel[trendRange]} Trend</h3>
+            <div className="flex gap-1">
+              {([1, 3, 6, 12] as const).map((n) => (
+                <button
+                  key={n}
+                  onClick={() => setTrendRange(n)}
+                  className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+                    trendRange === n
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                  }`}
+                >
+                  {n === 12 ? '1Y' : `${n}M`}
+                </button>
+              ))}
+            </div>
+          </div>
           {isLoadingChart ? (
             <div className="flex justify-center py-10">
               <div className="w-7 h-7 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
             </div>
+          ) : chartError ? (
+            <div className="py-8 text-center">
+              <p className="text-xs text-red-500 font-medium">Failed to load chart</p>
+              <p className="text-xs text-gray-400 mt-1 break-all px-2">{chartError}</p>
+            </div>
+          ) : chartData.length === 0 ? (
+            <div className="py-8 text-center text-gray-400">
+              <p className="text-sm">No data yet</p>
+            </div>
           ) : (
             <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={chartData} barCategoryGap="30%" barGap={2}>
+              <BarChart data={chartData} barCategoryGap={trendRange === 12 ? '20%' : '30%'} barGap={2}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
-                <XAxis dataKey="label" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                <XAxis dataKey="label" tick={{ fontSize: trendRange === 12 ? 9 : 11 }} axisLine={false} tickLine={false} />
                 <YAxis
                   tickFormatter={shortVND}
                   tick={{ fontSize: 10 }}

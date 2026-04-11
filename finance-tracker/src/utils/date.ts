@@ -17,6 +17,31 @@ export function formatMonth(date: Date): string {
   return format(date, 'MMMM yyyy')
 }
 
+/**
+ * Normalize any date string from GAS/Sheets to YYYY-MM-DD.
+ * Handles: "2026-04-10", "2026/04/10", "04/10/2026", full ISO timestamps.
+ */
+export function normalizeDate(raw: string): string {
+  if (!raw) return ''
+  // Already YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw
+  // Full ISO timestamp: 2026-04-10T...
+  if (/^\d{4}-\d{2}-\d{2}T/.test(raw)) return raw.slice(0, 10)
+  // YYYY/MM/DD
+  if (/^\d{4}\/\d{2}\/\d{2}$/.test(raw)) return raw.replace(/\//g, '-')
+  // MM/DD/YYYY
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(raw)) {
+    const [m, d, y] = raw.split('/')
+    return `${y}-${m}-${d}`
+  }
+  // Fallback: try Date parse
+  try {
+    return format(new Date(raw), 'yyyy-MM-dd')
+  } catch {
+    return raw
+  }
+}
+
 /** Get first and last day of a month as YYYY-MM-DD */
 export function monthRange(date: Date): { start: string; end: string } {
   return {

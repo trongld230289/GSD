@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import type { Category, TransactionType } from '../types'
 import { useAuthStore, useAppStore } from '../store/useStore'
 import { apiAddTransaction, apiUpdateTransaction } from '../api/gas'
-import { todayISO } from '../utils/date'
+import { todayISO, normalizeDate } from '../utils/date'
 import { formatVND, parseVNDInput } from '../utils/format'
 
 interface Props {
@@ -30,7 +30,7 @@ export default function AddTransactionDrawer({ categories }: Props) {
       setType(editingTransaction.type)
       setCategoryId(editingTransaction.category_id)
       setAmountStr(editingTransaction.amount.toString())
-      setDate(editingTransaction.date)
+      setDate(normalizeDate(editingTransaction.date))
       setNote(editingTransaction.note)
     } else {
       setType('expense')

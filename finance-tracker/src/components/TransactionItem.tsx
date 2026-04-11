@@ -28,7 +28,12 @@ export default function TransactionItem({ transaction, category, isLast }: Props
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging.current) return
     const dx = startX.current - e.touches[0].clientX
-    if (dx > 0) setSwipeX(Math.min(dx, 80))
+    if (dx > 0) {
+      setSwipeX(Math.min(dx, 80))
+    } else {
+      // swipe right — close the delete reveal
+      setSwipeX(Math.max(0, swipeX + dx))
+    }
   }
 
   const handleTouchEnd = () => {

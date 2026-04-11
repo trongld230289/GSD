@@ -37,4 +37,14 @@ Rules:
 - SUMMARY is written **after smoke testing is confirmed** (not just after execution) — captures actual outcome including any fixes made during smoke testing, not intended outcome
 - SUMMARY replaces UAT.md — user testing is tracked in `.tests/phase-N-manual-tests.md` instead
 - If a file was missed in a previous session, create it retroactively before continuing
+
+### Client↔Backend API Contract Rule
+Any phase that adds or modifies a GAS API action MUST follow this sequence — no exceptions:
+
+1. **Before writing any client code**, update `.planning/gas-api-contract.md` with the exact wire format table for the new/changed action — list every field, its type, and an example value.
+2. **Cross-check rule:** Every field the GAS handler reads via `params.X` must exist at the **top level** of the client POST body or GET params — never nest data under a sub-key (e.g. `{ data: { type, amount } }`) unless the GAS handler explicitly unwraps it.
+3. The PLAN file for that action must reference the contract: "See `.planning/gas-api-contract.md` — action `X`".
+4. After implementation, verify the contract file is up-to-date before closing the phase.
+
+> **Why this rule exists:** In Phase 2, `apiAddTransaction` sent `{ action, token, data: tx }` while GAS read `params.type` directly — the nested `data` key meant all transaction fields were `undefined`, creating rows with only id + timestamp. The contract file makes the wire format explicit and prevents this class of bug.
 <!-- /GSD Configuration -->

@@ -213,7 +213,7 @@ export default function AddTransactionDrawer({ categories }: Props) {
             )}
           </div>
 
-          {/* Date + Note row */
+          {/* Date + Note row */}
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-xs text-gray-500 mb-1 block">Date</label>

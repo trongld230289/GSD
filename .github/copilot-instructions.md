@@ -6,4 +6,16 @@
 - When a command says to spawn a subagent, prefer a matching custom agent from `.github/agents`.
 - Do not apply GSD workflows unless the user explicitly asks for them.
 - After completing any `gsd-*` command (or any deliverable it triggers: feature, bug fix, tests, docs, etc.), ALWAYS: (1) offer the user the next step by prompting via `ask_user`; repeat this feedback loop until the user explicitly indicates they are done.
+
+## Finance Tracker — Project Rules
+
+### Phase Test Suite Gate
+Before declaring any phase complete and moving to the next phase, ALWAYS:
+1. Ask the user: "Have you completed smoke testing of all main features in Phase [X]? If yes, I'll create the manual test suite before we move on."
+2. Wait for confirmation.
+3. Once confirmed, create `.tests/phase-[N]-manual-tests.md` covering all requirements from that phase — group by feature area, include step-by-step test cases and a regression checklist.
+4. Commit and push the test file.
+5. Only then proceed to the next phase.
+
+Test suite files live in `.tests/` and are named `phase-1-manual-tests.md`, `phase-2-manual-tests.md`, etc.
 <!-- /GSD Configuration -->

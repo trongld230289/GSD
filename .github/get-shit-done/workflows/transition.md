@@ -146,6 +146,30 @@ Wait for user decision.
 
 </step>
 
+<step name="test_suite_gate">
+
+Before finalizing the phase transition, ask the user:
+
+```
+✅ Phase [X] is complete.
+
+Before moving on — have you finished smoke testing all main features in Phase [X]?
+
+Once you confirm, I'll create the manual test suite (.tests/phase-[X]-manual-tests.md)
+covering all phase requirements, grouped by feature area, with step-by-step test cases
+and a regression checklist. Then we'll move to Phase [X+1].
+```
+
+Wait for user confirmation.
+
+Once confirmed:
+1. Create `.tests/phase-[X]-manual-tests.md` — group by feature area, include step-by-step
+   cases (Step | Action | Expected), and a quick regression checklist at the bottom.
+2. Commit: `git add .tests/ && git commit -m "test: add Phase [X] manual test suite"`
+3. Then proceed to cleanup_handoff.
+
+</step>
+
 <step name="cleanup_handoff">
 
 Check for lingering handoffs:

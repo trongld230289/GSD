@@ -4,12 +4,12 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: Phase 1 — Verify remaining features, then start Phase 2
 status: unknown
-last_updated: "2026-04-18T23:42:35.125Z"
+last_updated: "2026-04-18T23:44:12.745Z"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 3
-  completed_plans: 2
+  completed_plans: 3
   percent: 67
 ---
 
@@ -118,6 +118,7 @@ If any test fails, fix it before starting Phase 2.
 ---
 - [Phase 04-ynab-budget-allocation]: useBudgetStore omits persist middleware — budget data always fresh-loaded from GAS on mount
 - [Phase 04-ynab-budget-allocation]: BudgetRow is a computed UI-only type, not stored in Zustand — cross-references categories and transactions in UI layer
+- [Phase 04-ynab-budget-allocation]: Budgets stored in separate sheet tab (month|category_id|budgeted), no user_email column, Available computed client-side
 
 ## Requirements Progress
 

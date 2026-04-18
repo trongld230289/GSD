@@ -2,6 +2,23 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { AuthState, Category, Transaction, GoogleUser } from '../types'
 
+// ─── Settings Store ───────────────────────────────────────────────────────────
+
+interface SettingsStore {
+  githubPAT: string
+  setGithubPAT: (pat: string) => void
+}
+
+export const useSettingsStore = create<SettingsStore>()(
+  persist(
+    (set) => ({
+      githubPAT: '',
+      setGithubPAT: (githubPAT) => set({ githubPAT }),
+    }),
+    { name: 'finance-settings' }
+  )
+)
+
 // ─── Auth Store ───────────────────────────────────────────────────────────────
 
 interface AuthStore extends AuthState {

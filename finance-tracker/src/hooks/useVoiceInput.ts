@@ -7,13 +7,16 @@ interface Options {
   onError: (msg: string) => void
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnySpeechRecognition = any
+
 export function useVoiceInput({ onTranscript, onError }: Options) {
   const [state, setState] = useState<VoiceState>('idle')
-  const recRef = useRef<InstanceType<typeof SpeechRecognition> | null>(null)
+  const recRef = useRef<AnySpeechRecognition>(null)
 
   const start = useCallback(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const SR: typeof SpeechRecognition = (window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition
+    const SR: AnySpeechRecognition = (window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition
     if (!SR) {
       onError('Trình duyệt không hỗ trợ voice. Dùng Chrome hoặc Edge.')
       setState('error')
@@ -27,13 +30,13 @@ export function useVoiceInput({ onTranscript, onError }: Options) {
 
     rec.onstart = () => setState('listening')
 
-    rec.onresult = (e) => {
+    rec.onresult = (e: AnySpeechRecognition) => {
       const text = e.results[0][0].transcript
       setState('processing')
       onTranscript(text)
     }
 
-    rec.onerror = (e) => {
+    rec.onerror = (e: AnySpeechRecognition) => {
       const msg =
         e.error === 'not-allowed' ? 'Chưa cấp quyền microphone.' :
         e.error === 'no-speech'   ? 'Không nghe thấy gì.' :

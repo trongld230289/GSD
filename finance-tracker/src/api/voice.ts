@@ -10,38 +10,6 @@ export interface ParsedTransaction {
   note: string
 }
 
-export async function transcribeAudio(
-  blob: Blob,
-  mimeType: string,
-  githubPAT: string
-): Promise<string> {
-  // Chọn extension phù hợp với mimeType
-  const ext = mimeType.includes('mp4') || mimeType.includes('aac') ? 'm4a'
-    : mimeType.includes('ogg') ? 'ogg'
-    : 'webm'
-
-  const formData = new FormData()
-  formData.append('file', blob, `audio.${ext}`)
-  formData.append('model', 'openai/whisper')
-  formData.append('language', 'vi')
-
-  const res = await fetch('https://models.inference.ai.azure.com/audio/transcriptions', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${githubPAT}` },
-    body: formData,
-  })
-
-  if (!res.ok) {
-    const body = await res.text().catch(() => '')
-    throw new Error(`Whisper ${res.status}: ${body || res.statusText}`)
-  }
-
-  const data = await res.json()
-  const text = (data.text || '').trim()
-  if (!text) throw new Error('Không nhận ra giọng nói, thử lại.')
-  return text
-}
-
 export async function parseVoiceInput(
   transcript: string,
   githubPAT: string
@@ -100,4 +68,59 @@ Rules:
   }
 
   return parsed
+}
+
+export async function transcribeAudio(
+  blob: Blob,
+  mimeType: string,
+  githubPAT: string
+): Promise<string> {
+  // Convert blob → base64
+  const arrayBuffer = await blob.arrayBuffer()
+  const uint8 = new Uint8Array(arrayBuffer)
+  let binary = ''
+  for (let i = 0; i < uint8.length; i++) binary += String.fromCharCode(uint8[i])
+  const base64 = btoa(binary)
+
+  // GPT-4o audio input — format: mp4/webm/ogg
+  const audioFormat = mimeType.includes('mp4') || mimeType.includes('aac') ? 'mp4'
+    : mimeType.includes('ogg') ? 'ogg'
+    : 'webm'
+
+  const res = await fetch('https://models.inference.ai.azure.com/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${githubPAT}`,
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o-audio-preview',
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'input_audio',
+              input_audio: { data: base64, format: audioFormat },
+            },
+            {
+              type: 'text',
+              text: 'Transcribe this Vietnamese audio exactly. Return only the transcribed text, nothing else.',
+            },
+          ],
+        },
+      ],
+      max_tokens: 200,
+    }),
+  })
+
+  if (!res.ok) {
+    const body = await res.text().catch(() => '')
+    throw new Error(`Transcribe ${res.status}: ${body || res.statusText}`)
+  }
+
+  const data = await res.json()
+  const text = (data.choices?.[0]?.message?.content || '').trim()
+  if (!text) throw new Error('Không nhận ra giọng nói, thử lại.')
+  return text
 }

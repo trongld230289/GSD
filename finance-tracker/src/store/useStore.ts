@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { AuthState, Category, Transaction, GoogleUser } from '../types'
+import type { AuthState, Category, Transaction, GoogleUser, BudgetEntry } from '../types'
 
 // ─── Settings Store ───────────────────────────────────────────────────────────
 
@@ -95,4 +95,50 @@ export const useAppStore = create<AppStore>((set) => ({
       const { [month]: _, ...rest } = s.txCache
       return { txCache: rest }
     }),
+}))
+
+// ─── Budget Store ─────────────────────────────────────────────────────────────
+
+interface BudgetStore {
+  budgets: BudgetEntry[]                        // raw from GAS for current budgetMonth
+  budgetMonth: string                           // YYYY-MM currently viewing
+  isLoadingBudgets: boolean
+  budgetCache: Record<string, BudgetEntry[]>    // month-keyed cache, mirrors txCache pattern
+
+  setBudgetMonth: (month: string) => void
+  setBudgets: (month: string, entries: BudgetEntry[]) => void
+  updateBudgetEntry: (month: string, category_id: string, budgeted: number) => void
+  setLoadingBudgets: (v: boolean) => void
+}
+
+export const useBudgetStore = create<BudgetStore>()((set, get) => ({
+  budgets: [],
+  budgetMonth: new Date().toISOString().slice(0, 7),  // "YYYY-MM"
+  isLoadingBudgets: false,
+  budgetCache: {},
+
+  setBudgetMonth: (month) => {
+    const cached = get().budgetCache[month]
+    set({ budgetMonth: month, budgets: cached ?? [] })
+  },
+
+  setBudgets: (month, entries) =>
+    set((state) => ({
+      budgets: entries,
+      budgetCache: { ...state.budgetCache, [month]: entries },
+    })),
+
+  updateBudgetEntry: (month, category_id, budgeted) =>
+    set((state) => {
+      const existing = state.budgetCache[month] ?? []
+      const updated = existing.some(e => e.category_id === category_id)
+        ? existing.map(e => e.category_id === category_id ? { ...e, budgeted } : e)
+        : [...existing, { category_id, budgeted }]
+      return {
+        budgets: state.budgetMonth === month ? updated : state.budgets,
+        budgetCache: { ...state.budgetCache, [month]: updated },
+      }
+    }),
+
+  setLoadingBudgets: (v) => set({ isLoadingBudgets: v }),
 }))

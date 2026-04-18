@@ -94,7 +94,7 @@ export async function transcribeAudio(
       Authorization: `Bearer ${githubPAT}`,
     },
     body: JSON.stringify({
-      model: 'gpt-4o-audio-preview',
+      model: 'gpt-4o',
       messages: [
         {
           role: 'user',

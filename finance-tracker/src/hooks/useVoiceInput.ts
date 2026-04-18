@@ -38,8 +38,10 @@ export function useVoiceInput({ onTranscript, onError }: Options) {
 
     rec.onerror = (e: AnySpeechRecognition) => {
       const msg =
-        e.error === 'not-allowed' ? 'Chưa cấp quyền microphone.' :
-        e.error === 'no-speech'   ? 'Không nghe thấy gì.' :
+        (e.error === 'not-allowed' || e.error === 'service-not-allowed')
+          ? 'Chưa cấp quyền microphone. Vào Settings → Safari → Microphone để bật.' :
+        e.error === 'no-speech'   ? 'Không nghe thấy gì. Thử lại nhé.' :
+        e.error === 'network'     ? 'Lỗi mạng, thử lại.' :
         `Lỗi: ${e.error}`
       onError(msg)
       setState('error')

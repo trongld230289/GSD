@@ -1,6 +1,6 @@
 # Roadmap: Finance Tracker
 
-**Created:** 2026-04-07
+**Created:** 2004-04-07
 **Phases:** 3
 **Strategy:** Coarse granularity — each phase delivers a complete vertical slice of value.
 
@@ -89,6 +89,30 @@
 
 ---
 
+## Phase 4: YNAB Budget Allocation
+
+**Goal:** YNAB-style "give every dollar a job" — user assigns income to expense categories each month, sees Budgeted / Spent / Available per category, and gets a "Ready to Assign" banner showing unallocated income.
+
+**Requirements:** BUDGET-01, BUDGET-02, BUDGET-03, BUDGET-04, BUDGET-05, BUDGET-06, BUDGET-07
+**Depends on:** Phase 3
+**Plans:** 3 plans
+
+**Done when:**
+- [ ] User can navigate to /budget via bottom nav
+- [ ] All expense categories appear as rows with Budgeted / Spent / Available columns
+- [ ] User can edit a Budgeted cell and save on blur/Enter (not on keystroke)
+- [ ] Saved budgets persist in Google Sheets and reload from cache on revisit
+- [ ] Ready to Assign banner shows total income minus total budgeted (green/red)
+- [ ] Available goes red when negative (overspent)
+- [ ] Budget page loads transactions for month if not already cached
+
+Plans:
+- [ ] 04-01-PLAN.md — GAS Budgets sheet tab + getBudgets + setBudget endpoints
+- [ ] 04-02-PLAN.md — TypeScript types + API functions + useBudgetStore (data layer)
+- [ ] 04-03-PLAN.md — BudgetPage + BudgetCategoryRow + /budget route + BottomNav third tab
+
+---
+
 ## Post-v1 Backlog (v2)
 
 | Feature | Phase TBD | Priority |
@@ -96,11 +120,7 @@
 | Monthly budget limits per category | Phase 4 | High |
 | Budget progress bars in dashboard | Phase 4 | High |
 | Alerts at 80% budget | Phase 4 | Medium |
-| Recurring transactions | Phase 5 | Medium |
+| Recurring transactions | Phase 4 | Medium |
 | Custom categories | Phase 4 | Low |
-| Dark mode | Phase 5 | Low |
-| Multi-currency (VND + USD) | Phase 5 | Low |
-
----
-*Roadmap created: 2026-04-07*
-*Last updated: 2026-04-07 after initial creation*
+| Dark mode | Phase 4 | Low |
+| Multi-currency (VND + USD) | Phase 4 | Low |

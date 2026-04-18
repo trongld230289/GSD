@@ -56,6 +56,7 @@ export default function AddTransactionDrawer({ categories }: Props) {
 
   const { state: voiceState, start: voiceStart, stop: voiceStop, reset: voiceReset } =
     useVoiceInput({
+      githubPAT,
       onTranscript: handleTranscript,
       onError: (msg) => setError(msg),
     })

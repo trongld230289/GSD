@@ -10,6 +10,38 @@ export interface ParsedTransaction {
   note: string
 }
 
+export async function transcribeAudio(
+  blob: Blob,
+  mimeType: string,
+  githubPAT: string
+): Promise<string> {
+  // Chọn extension phù hợp với mimeType
+  const ext = mimeType.includes('mp4') || mimeType.includes('aac') ? 'm4a'
+    : mimeType.includes('ogg') ? 'ogg'
+    : 'webm'
+
+  const formData = new FormData()
+  formData.append('file', blob, `audio.${ext}`)
+  formData.append('model', 'openai/whisper')
+  formData.append('language', 'vi')
+
+  const res = await fetch('https://models.inference.ai.azure.com/audio/transcriptions', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${githubPAT}` },
+    body: formData,
+  })
+
+  if (!res.ok) {
+    const body = await res.text().catch(() => '')
+    throw new Error(`Whisper ${res.status}: ${body || res.statusText}`)
+  }
+
+  const data = await res.json()
+  const text = (data.text || '').trim()
+  if (!text) throw new Error('Không nhận ra giọng nói, thử lại.')
+  return text
+}
+
 export async function parseVoiceInput(
   transcript: string,
   githubPAT: string

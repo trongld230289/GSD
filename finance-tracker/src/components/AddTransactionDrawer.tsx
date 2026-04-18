@@ -7,6 +7,7 @@ import { useVoiceInput } from '../hooks/useVoiceInput'
 import { todayISO, normalizeDate } from '../utils/date'
 import { formatVND, parseVNDInput } from '../utils/format'
 import { CATEGORY_META_MAP } from '../data/categories'
+import SettingsModal from './SettingsModal'
 
 interface Props {
   categories: Category[]
@@ -28,11 +29,21 @@ export default function AddTransactionDrawer({ categories }: Props) {
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState('')
   const [voiceHint, setVoiceHint] = useState('')
+  const [showSettings, setShowSettings] = useState(false)
+
+  const handleVoiceClick = useCallback(() => {
+    if (!githubPAT) {
+      setShowSettings(true)
+      return
+    }
+    if (voiceState === 'listening') voiceStop()
+    else voiceStart()
+  }, [githubPAT, voiceState])
 
   const handleTranscript = useCallback(async (text: string) => {
     setVoiceHint(`"${text}"`)
     if (!githubPAT) {
-      setError('Chưa có GitHub PAT — vào Settings để thêm.')
+      setShowSettings(true)
       voiceReset()
       return
     }
@@ -127,6 +138,8 @@ export default function AddTransactionDrawer({ categories }: Props) {
 
   return (
     <>
+    {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
+    <>
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/40 z-40 transition-opacity"
@@ -148,9 +161,9 @@ export default function AddTransactionDrawer({ categories }: Props) {
           <div className="flex items-center gap-2">
             {!isEditing && (
               <button
-                onClick={voiceState === 'listening' ? voiceStop : voiceStart}
+                onClick={handleVoiceClick}
                 disabled={voiceState === 'processing'}
-                title={voiceState === 'listening' ? 'Dừng' : 'Voice input'}
+                title={!githubPAT ? 'Cài GitHub PAT để dùng voice' : voiceState === 'listening' ? 'Dừng' : 'Voice input'}
                 className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-base
                   ${voiceState === 'listening'
                     ? 'bg-red-100 text-red-500 animate-pulse'
@@ -316,6 +329,7 @@ export default function AddTransactionDrawer({ categories }: Props) {
           </button>
         </div>
       </div>
+    </>
     </>
   )
 }

@@ -138,8 +138,6 @@ export default function AddTransactionDrawer({ categories }: Props) {
 
   return (
     <>
-    {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
-    <>
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/40 z-40 transition-opacity"
@@ -329,7 +327,7 @@ export default function AddTransactionDrawer({ categories }: Props) {
           </button>
         </div>
       </div>
-    </>
+      {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
     </>
   )
 }

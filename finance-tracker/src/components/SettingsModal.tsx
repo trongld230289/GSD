@@ -18,8 +18,8 @@ export default function SettingsModal({ onClose }: Props) {
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/50 z-50" onClick={onClose} />
-      <div className="fixed inset-x-4 top-1/2 -translate-y-1/2 max-w-sm mx-auto bg-white rounded-2xl z-50 shadow-2xl p-5 space-y-4">
+      <div className="fixed inset-0 bg-black/50 z-[60]" onClick={onClose} />
+      <div className="fixed inset-x-4 top-1/2 -translate-y-1/2 max-w-sm mx-auto bg-white rounded-2xl z-[70] shadow-2xl p-5 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-bold text-gray-800 text-base">Settings</h2>
           <button

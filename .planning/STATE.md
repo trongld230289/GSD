@@ -4,12 +4,12 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: Phase 1 — Verify remaining features, then start Phase 2
 status: unknown
-last_updated: "2026-04-18T23:44:12.745Z"
+last_updated: "2026-04-18T23:59:04.241Z"
 progress:
   total_phases: 4
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 3
+  completed_plans: 4
   percent: 67
 ---
 
@@ -119,6 +119,8 @@ If any test fails, fix it before starting Phase 2.
 - [Phase 04-ynab-budget-allocation]: useBudgetStore omits persist middleware — budget data always fresh-loaded from GAS on mount
 - [Phase 04-ynab-budget-allocation]: BudgetRow is a computed UI-only type, not stored in Zustand — cross-references categories and transactions in UI layer
 - [Phase 04-ynab-budget-allocation]: Budgets stored in separate sheet tab (month|category_id|budgeted), no user_email column, Available computed client-side
+- [Phase 04-ynab-budget-allocation]: BottomNav Budget tab uses money-bag emoji, consistent with existing emoji pattern
+- [Phase 04-ynab-budget-allocation]: computeBudgetRows defined inside BudgetPage.tsx (not exported utility) to keep UI logic co-located
 
 ## Requirements Progress
 

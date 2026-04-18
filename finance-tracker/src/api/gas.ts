@@ -1,4 +1,4 @@
-import type { Category, GasResponse, MonthlyTotals, Transaction } from '../types'
+import type { BudgetEntry, Category, GasResponse, MonthlyTotals, Transaction } from '../types'
 import { format, subMonths } from 'date-fns'
 
 export function lastNMonths(n: number): string[] {
@@ -103,4 +103,35 @@ export async function apiGetMonthlyTotals(
   })
   if (!res.ok) throw new Error(res.error ?? 'Failed to load monthly totals')
   return res.data ?? []
+}
+
+// ─── Budget API ───────────────────────────────────────────────────────────────
+
+export async function apiGetBudgets(
+  token: string,
+  month: string  // YYYY-MM
+): Promise<BudgetEntry[]> {
+  const res = await gasGet<BudgetEntry[]>({
+    action: 'getBudgets',
+    token,
+    month,
+  })
+  if (!res.ok) throw new Error(res.error ?? 'Failed to load budgets')
+  return res.data ?? []
+}
+
+export async function apiSetBudget(
+  token: string,
+  month: string,
+  category_id: string,
+  budgeted: number
+): Promise<void> {
+  const res = await gasPost<{ success: boolean }>({
+    action: 'setBudget',
+    token,
+    month,
+    category_id,
+    budgeted,
+  })
+  if (!res.ok) throw new Error(res.error ?? 'Failed to save budget')
 }

@@ -37,6 +37,11 @@ export function useVoiceInput({ onTranscript, onError }: Options) {
     }
 
     rec.onerror = (e: AnySpeechRecognition) => {
+      // 'aborted' = iOS/Safari tự ngắt (không phải lỗi người dùng) → reset thầm
+      if (e.error === 'aborted') {
+        setState('idle')
+        return
+      }
       const msg =
         (e.error === 'not-allowed' || e.error === 'service-not-allowed')
           ? 'Chưa cấp quyền microphone. Vào Settings → Safari → Microphone để bật.' :

@@ -1,3 +1,32 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+current_phase: Phase 1 — Verify remaining features, then start Phase 2
+status: unknown
+last_updated: "2026-04-18T23:42:35.125Z"
+progress:
+  total_phases: 4
+  completed_phases: 0
+  total_plans: 3
+  completed_plans: 2
+  percent: 67
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+current_phase: Phase 1 — Verify remaining features, then start Phase 2
+status: unknown
+last_updated: "2026-04-18T17:43:53.136Z"
+progress:
+  [███████░░░] 67%
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 1
+---
+
 # Project State: Finance Tracker
 
 **Last Updated:** 2026-04-10 (end of day)
@@ -76,6 +105,9 @@ If any test fails, fix it before starting Phase 2.
 4. Test GAS API with curl/Postman before integrating React
 5. Google OAuth token expires in 1 hour — build refresh logic in Phase 1
 
+### Roadmap Evolution
+- Phase 4 added: YNAB Budget Allocation (give every dollar a job — Available/Budgeted/Spent per category, overspend pulls from other categories)
+
 ### Decisions made
 - Google Sheets as database (user chose this over Firebase/Supabase)
 - VND only for v1
@@ -84,6 +116,8 @@ If any test fails, fix it before starting Phase 2.
 - Coarse granularity (3 phases)
 
 ---
+- [Phase 04-ynab-budget-allocation]: useBudgetStore omits persist middleware — budget data always fresh-loaded from GAS on mount
+- [Phase 04-ynab-budget-allocation]: BudgetRow is a computed UI-only type, not stored in Zustand — cross-references categories and transactions in UI layer
 
 ## Requirements Progress
 

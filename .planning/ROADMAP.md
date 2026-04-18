@@ -95,7 +95,7 @@
 
 **Requirements:** BUDGET-01, BUDGET-02, BUDGET-03, BUDGET-04, BUDGET-05, BUDGET-06, BUDGET-07
 **Depends on:** Phase 3
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 
 **Done when:**
 - [ ] User can navigate to /budget via bottom nav

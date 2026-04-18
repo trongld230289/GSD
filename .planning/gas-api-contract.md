@@ -128,6 +128,42 @@ MonthlyTotals { month: "YYYY-MM", income: number, expense: number }
 
 ---
 
+### `getBudgets` — GET
+**Params:**
+
+| Key | Type | Example |
+|---|---|---|
+| `action` | string | `"getBudgets"` |
+| `token` | string | Google ID token |
+| `month` | string (`YYYY-MM`) | `"2026-04"` |
+
+**Response:** `{ ok: true, data: BudgetEntry[] }`
+
+```
+BudgetEntry { category_id: string, budgeted: number }
+```
+
+Returns empty array (not error) when no budget rows exist for the month.
+
+---
+
+### `setBudget` — POST
+**Body:**
+
+| Key | Type | Example |
+|---|---|---|
+| `action` | string | `"setBudget"` |
+| `token` | string | Google ID token |
+| `month` | string (`YYYY-MM`) | `"2026-04"` |
+| `category_id` | string | `"food-drink"` |
+| `budgeted` | number | `3000000` |
+
+**Response:** `{ ok: true, data: { success: true } }`
+
+Upsert behavior: finds existing row for `month + category_id`, updates `budgeted`; appends new row if not found. Never creates duplicates.
+
+---
+
 ## How to Add a New Action
 
 1. Define the action in GAS (`Code.gs`) — add a `case` to the switch, write the handler function.

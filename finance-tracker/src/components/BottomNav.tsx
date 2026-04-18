@@ -16,6 +16,17 @@ export default function BottomNav() {
         Home
       </NavLink>
       <NavLink
+        to="/budget"
+        className={({ isActive }) =>
+          `flex-1 flex flex-col items-center py-2 text-xs font-medium transition-colors ${
+            isActive ? 'text-green-600' : 'text-gray-400'
+          }`
+        }
+      >
+        <span className="text-xl mb-0.5">💰</span>
+        Budget
+      </NavLink>
+      <NavLink
         to="/reports"
         className={({ isActive }) =>
           `flex-1 flex flex-col items-center py-2 text-xs font-medium transition-colors ${

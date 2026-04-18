@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import type { Category, TransactionType } from '../types'
 import { useAuthStore, useAppStore, useSettingsStore } from '../store/useStore'
 import { apiAddTransaction, apiUpdateTransaction } from '../api/gas'
@@ -30,21 +30,13 @@ export default function AddTransactionDrawer({ categories }: Props) {
   const [error, setError] = useState('')
   const [voiceHint, setVoiceHint] = useState('')
   const [showSettings, setShowSettings] = useState(false)
-
-  const handleVoiceClick = useCallback(() => {
-    if (!githubPAT) {
-      setShowSettings(true)
-      return
-    }
-    if (voiceState === 'listening') voiceStop()
-    else voiceStart()
-  }, [githubPAT, voiceState])
+  const voiceResetRef = useRef<() => void>(() => {})
 
   const handleTranscript = useCallback(async (text: string) => {
     setVoiceHint(`"${text}"`)
     if (!githubPAT) {
       setShowSettings(true)
-      voiceReset()
+      voiceResetRef.current()
       return
     }
     try {
@@ -58,15 +50,23 @@ export default function AddTransactionDrawer({ categories }: Props) {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Voice parse failed')
     } finally {
-      voiceReset()
+      voiceResetRef.current()
     }
   }, [githubPAT])
 
   const { state: voiceState, start: voiceStart, stop: voiceStop, reset: voiceReset } =
     useVoiceInput({
       onTranscript: handleTranscript,
-      onError: (msg) => { setError(msg); },
+      onError: (msg) => setError(msg),
     })
+
+  voiceResetRef.current = voiceReset
+
+  const handleVoiceClick = useCallback(() => {
+    if (!githubPAT) { setShowSettings(true); return }
+    if (voiceState === 'listening') voiceStop()
+    else voiceStart()
+  }, [githubPAT, voiceState, voiceStart, voiceStop])
 
   // Prefill form when editing
   useEffect(() => {

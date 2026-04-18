@@ -63,6 +63,12 @@ export function useVoiceInput({ onTranscript, onError }: Options) {
     }
 
     rec.onend = () => {
+      // Nếu kết thúc mà không nhận được gì (iOS hay xảy ra) → báo user
+      if (!didGetResultRef.current) {
+        onError('Không nghe thấy gì. Hãy nói rõ và thử lại.')
+        setState('error')
+        return
+      }
       setState((s) => (s === 'listening' ? 'idle' : s))
     }
 

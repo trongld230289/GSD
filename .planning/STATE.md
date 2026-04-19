@@ -2,11 +2,26 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
+current_phase: Phase 1 — Plan 4 complete, continuing to Plan 5 (Transaction List View)
+status: unknown
+last_updated: "2026-04-19T05:47:32.779Z"
+progress:
+  total_phases: 4
+  completed_phases: 1
+  total_plans: 4
+  completed_plans: 9
+  percent: 100
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
 current_phase: 04
 status: unknown
 last_updated: "2026-04-19T05:44:35.031Z"
 progress:
-  total_phases: 4
+  [██████████] 100%
   completed_phases: 1
   total_plans: 4
   completed_plans: 8
@@ -30,8 +45,8 @@ progress:
 # Project State: Finance Tracker
 
 **Last Updated:** 2026-04-19
-**Current Phase:** Phase 1 — Plan 4 complete, continuing to Plan 5 (Transaction List View)
-**Overall Status:** Phase 1 in progress — Plans 1-4 complete
+**Current Phase:** Phase 1 — Plan 5 complete, continuing to Plan 6 (Edit & Delete)
+**Overall Status:** Phase 1 in progress — Plans 1-5 complete
 
 ## Deployment Info
 
@@ -61,14 +76,19 @@ progress:
 - New OAuth client (Web client 2) created with `https://trongld230289.github.io` as authorized origin ✅
 - Updated `LoginPage.tsx` with new OAuth Client ID ✅
 
-### What to do FIRST tomorrow (before Phase 2)
-Run these 3 verification tests on the live iPhone app (`https://trongld230289.github.io/GSD/`):
+### Plan 5 completed (Transaction List View)
+- MonthNav with prev/next arrows and future-month guard ✅
+- BalanceSummary (Income/Expense/Balance cards) ✅
+- TransactionItem with swipe-to-delete and edit tap ✅
+- TransactionList with date-grouped rows ✅
+- BottomNav (Home/Budget/Reports) ✅
+- HomePage fully wired with month-keyed txCache ✅
+- Build: zero TypeScript errors, 3.41s ✅
 
-1. **Swipe to delete** — swipe left on a transaction → red Delete button appears → tap → confirm → gone
-2. **Edit** — tap a transaction row → drawer opens pre-filled with existing values → change something → Save → updated in list
-3. **Month nav** — tap ‹ → March 2026 (empty) → tap › → back to April 2026 with transactions
-
-If any test fails, fix it before starting Phase 2.
+### What to do NEXT (Plan 6: Edit & Delete)
+- Edit drawer pre-fill from `useAppStore.editingTransaction` (tap TransactionItem already calls `openDrawer(tx)`)
+- Delete confirmation modal before `removeTransaction`
+- Update transaction in GAS via `apiUpdateTransaction`
 
 ### Phase 2 scope (after verification)
 - Pie/donut chart of spending by category (Recharts)
@@ -132,6 +152,9 @@ If any test fails, fix it before starting Phase 2.
 - [Phase 01-core-entry-sync]: useTokenRefresh hook mounted in Header (authenticated context) — avoids scheduling when logged out
 - [Phase 01-core-entry-sync]: AmountInput and CategoryGrid embedded inline in AddTransactionDrawer — single-use components with no reuse benefit from extraction
 - [Phase 01-core-entry-sync]: Drawer state in Zustand store (not page useState) — enables TransactionItem edit mode in Plan 6 without prop drilling
+- [Phase 01-core-entry-sync]: MonthNav uses date-fns Date object (not month/year integers) — consistent with useAppStore.currentMonth type
+- [Phase 01-core-entry-sync]: useTransactions logic inline in HomePage with txCache — cache-on-navigate avoids redundant GAS fetches
+- [Phase 01-core-entry-sync]: TransactionItem swipe-to-delete implemented inline — full CRUD on home screen, Plan 6 edit/delete partially pre-completed
 
 ## Requirements Progress
 

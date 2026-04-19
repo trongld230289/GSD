@@ -4,12 +4,12 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 04
 status: unknown
-last_updated: "2026-04-19T05:41:42.090Z"
+last_updated: "2026-04-19T05:44:35.031Z"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 4
-  completed_plans: 7
+  completed_plans: 8
   percent: 67
 ---
 
@@ -29,9 +29,9 @@ progress:
 
 # Project State: Finance Tracker
 
-**Last Updated:** 2026-04-10 (end of day)
-**Current Phase:** 04
-**Overall Status:** 🟡 Phase 1 functionally complete, pending final verification tomorrow
+**Last Updated:** 2026-04-19
+**Current Phase:** Phase 1 — Plan 4 complete, continuing to Plan 5 (Transaction List View)
+**Overall Status:** Phase 1 in progress — Plans 1-4 complete
 
 ## Deployment Info
 
@@ -130,6 +130,8 @@ If any test fails, fix it before starting Phase 2.
 - [Phase 01-core-entry-sync]: No AuthProvider component — App.tsx auth-guard routes + LoginPage GSI init achieves same result with less abstraction
 - [Phase 01-core-entry-sync]: tokenExpiry persisted in Zustand store (not in-memory timer) — refresh scheduling survives page reload
 - [Phase 01-core-entry-sync]: useTokenRefresh hook mounted in Header (authenticated context) — avoids scheduling when logged out
+- [Phase 01-core-entry-sync]: AmountInput and CategoryGrid embedded inline in AddTransactionDrawer — single-use components with no reuse benefit from extraction
+- [Phase 01-core-entry-sync]: Drawer state in Zustand store (not page useState) — enables TransactionItem edit mode in Plan 6 without prop drilling
 
 ## Requirements Progress
 

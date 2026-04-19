@@ -51,8 +51,8 @@
 - [ ] **REPORT-03**: User can filter all report views by month/year via month selector
 
 ### Export
-- [ ] **EXPORT-01**: User can export all transactions for the selected month as a CSV file
-- [ ] **EXPORT-02**: CSV columns: Date, Type (income/expense), Category, Amount (VND), Note
+- [x] **EXPORT-01**: User can export all transactions for the selected month as a CSV file
+- [x] **EXPORT-02**: CSV columns: Date, Type (income/expense), Category, Amount (VND), Note
 - [ ] **EXPORT-03**: Data is also directly accessible in the user's Google Sheet (read-only for power users)
 
 ### Responsive / PWA

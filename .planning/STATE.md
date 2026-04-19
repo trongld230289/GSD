@@ -4,12 +4,12 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 03
 status: unknown
-last_updated: "2026-04-19T10:30:58.989Z"
+last_updated: "2026-04-19T10:33:57.821Z"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 7
-  completed_plans: 16
+  completed_plans: 17
 ---
 
 ---
@@ -198,6 +198,8 @@ progress:
 - [Phase 03-mobile-polish-export]: Icons generated via custom Node.js sharp script due to pwa-assets-generator Windows DLL loading failure
 - [Phase 03-mobile-polish-export]: Used inline style paddingBottom: env(safe-area-inset-bottom) on BottomNav nav element — avoids Tailwind purge concern and is explicit
 - [Phase 03-mobile-polish-export]: status-bar-style set to black-translucent — required companion to viewport-fit=cover for correct iOS overlay behaviour
+- [Phase 03-mobile-polish-export]: UTF-8 BOM in CSV export required for Excel on Windows to read Vietnamese text correctly
+- [Phase 03-mobile-polish-export]: vitest + jsdom installed as first test infrastructure — test files excluded from main tsconfig to prevent global type errors
 
 ## Requirements Progress
 

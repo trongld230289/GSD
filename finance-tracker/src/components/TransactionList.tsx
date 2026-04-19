@@ -5,9 +5,10 @@ import TransactionItem from './TransactionItem'
 interface Props {
   transactions: Transaction[]
   categories: Category[]
+  onDeleteStart: (tx: Transaction) => void
 }
 
-export default function TransactionList({ transactions, categories }: Props) {
+export default function TransactionList({ transactions, categories, onDeleteStart }: Props) {
   const catMap = Object.fromEntries(categories.map((c) => [c.id, c]))
   const groups = groupByDate(transactions)
 
@@ -30,6 +31,7 @@ export default function TransactionList({ transactions, categories }: Props) {
                 transaction={tx}
                 category={catMap[tx.category_id]}
                 isLast={idx === items.length - 1}
+                onDeleteStart={onDeleteStart}
               />
             ))}
           </div>

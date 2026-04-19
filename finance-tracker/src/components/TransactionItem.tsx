@@ -1,20 +1,18 @@
 import { useRef, useState } from 'react'
 import type { Category, Transaction } from '../types'
 import { formatVND } from '../utils/format'
-import { useAuthStore, useAppStore } from '../store/useStore'
-import { apiDeleteTransaction } from '../api/gas'
+import { useAppStore } from '../store/useStore'
 
 interface Props {
   transaction: Transaction
   category: Category | undefined
   isLast: boolean
+  onDeleteStart: (tx: Transaction) => void
 }
 
-export default function TransactionItem({ transaction, category, isLast }: Props) {
-  const { idToken } = useAuthStore()
-  const { removeTransaction, openDrawer } = useAppStore()
+export default function TransactionItem({ transaction, category, isLast, onDeleteStart }: Props) {
+  const { openDrawer } = useAppStore()
   const [swipeX, setSwipeX] = useState(0)
-  const [isDeleting, setIsDeleting] = useState(false)
   const startX = useRef(0)
   const isDragging = useRef(false)
 
@@ -41,21 +39,9 @@ export default function TransactionItem({ transaction, category, isLast }: Props
     if (swipeX < SWIPE_THRESHOLD) setSwipeX(0)
   }
 
-  const handleDelete = async () => {
-    if (!idToken) return
-    if (!window.confirm('Delete this transaction?')) {
-      setSwipeX(0)
-      return
-    }
-    setIsDeleting(true)
-    try {
-      await apiDeleteTransaction(idToken, transaction.id)
-      removeTransaction(transaction.id)
-    } catch (err) {
-      console.error(err)
-      setIsDeleting(false)
-      setSwipeX(0)
-    }
+  const handleDelete = () => {
+    setSwipeX(0)
+    onDeleteStart(transaction)
   }
 
   const handleTap = () => {
@@ -77,11 +63,7 @@ export default function TransactionItem({ transaction, category, isLast }: Props
         className="absolute right-0 top-0 bottom-0 w-20 bg-red-500 flex items-center justify-center"
         onClick={handleDelete}
       >
-        {isDeleting ? (
-          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-        ) : (
-          <span className="text-white text-sm font-medium">Delete</span>
-        )}
+        <span className="text-white text-sm font-medium">Delete</span>
       </div>
 
       {/* Transaction row */}

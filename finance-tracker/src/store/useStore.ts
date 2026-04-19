@@ -22,8 +22,10 @@ export const useSettingsStore = create<SettingsStore>()(
 // ─── Auth Store ───────────────────────────────────────────────────────────────
 
 interface AuthStore extends AuthState {
+  tokenExpiry: number | null   // epoch ms when token expires (null = unknown)
   setUser: (user: GoogleUser, idToken: string) => void
   clearUser: () => void
+  setToken: (idToken: string, expiry: number) => void
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -31,9 +33,12 @@ export const useAuthStore = create<AuthStore>()(
     (set) => ({
       user: null,
       idToken: null,
+      tokenExpiry: null,
       isLoading: false,
-      setUser: (user, idToken) => set({ user, idToken }),
-      clearUser: () => set({ user: null, idToken: null }),
+      setUser: (user, idToken) =>
+        set({ user, idToken, tokenExpiry: Date.now() + 60 * 60 * 1000 }), // 60 min JWT lifetime
+      clearUser: () => set({ user: null, idToken: null, tokenExpiry: null }),
+      setToken: (idToken, expiry) => set({ idToken, tokenExpiry: expiry }),
     }),
     { name: 'finance-auth' }
   )

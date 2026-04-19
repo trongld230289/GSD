@@ -2,6 +2,7 @@ import { useEffect, useCallback } from 'react'
 import { useAuthStore } from '../store/useStore'
 
 const GOOGLE_CLIENT_ID = '993101146522-rn89slm3464o5d60qrq1hj5spf264vh8.apps.googleusercontent.com'
+const TOKEN_LIFETIME_MS = 60 * 60 * 1000  // 60 min (Google JWT expiry)
 
 declare global {
   interface Window {
@@ -11,6 +12,7 @@ declare global {
           initialize: (config: object) => void
           prompt: () => void
           renderButton: (el: HTMLElement, config: object) => void
+          disableAutoSelect: () => void
         }
       }
     }
@@ -18,7 +20,7 @@ declare global {
 }
 
 export default function LoginPage() {
-  const { setUser } = useAuthStore()
+  const { setUser, setToken } = useAuthStore()
 
   const handleCredentialResponse = useCallback(
     (response: { credential: string }) => {
@@ -34,8 +36,11 @@ export default function LoginPage() {
         },
         token
       )
+      // Record expiry for auto-refresh scheduling
+      setToken(token, Date.now() + TOKEN_LIFETIME_MS)
+      console.log('[Auth] Signed in as', payload.email)
     },
-    [setUser]
+    [setUser, setToken]
   )
 
   useEffect(() => {
@@ -45,6 +50,7 @@ export default function LoginPage() {
         client_id: GOOGLE_CLIENT_ID,
         callback: handleCredentialResponse,
         auto_select: true,
+        cancel_on_tap_outside: false,
       })
       // Try One Tap first
       window.google.accounts.id.prompt()

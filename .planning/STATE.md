@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: Phase 1 — Verify remaining features, then start Phase 2
 status: unknown
-last_updated: "2026-04-18T23:59:04.241Z"
+last_updated: "2026-04-19T00:01:26.443Z"
 progress:
   total_phases: 4
   completed_phases: 1
@@ -121,6 +121,9 @@ If any test fails, fix it before starting Phase 2.
 - [Phase 04-ynab-budget-allocation]: Budgets stored in separate sheet tab (month|category_id|budgeted), no user_email column, Available computed client-side
 - [Phase 04-ynab-budget-allocation]: BottomNav Budget tab uses money-bag emoji, consistent with existing emoji pattern
 - [Phase 04-ynab-budget-allocation]: computeBudgetRows defined inside BudgetPage.tsx (not exported utility) to keep UI logic co-located
+- [Phase 04-ynab-budget-allocation]: BottomNav Budget tab uses money-bag emoji (consistent with existing emoji pattern)
+- [Phase 04-ynab-budget-allocation]: computeBudgetRows defined inside BudgetPage.tsx (not exported utility) to keep UI logic co-located
+- [Phase 04-ynab-budget-allocation]: BudgetPage loads transactions independently if txCache is empty (direct /budget navigation works without white screen)
 
 ## Requirements Progress
 

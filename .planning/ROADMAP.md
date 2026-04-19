@@ -98,18 +98,18 @@
 **Plans:** 3/3 plans complete
 
 **Done when:**
-- [ ] User can navigate to /budget via bottom nav
-- [ ] All expense categories appear as rows with Budgeted / Spent / Available columns
-- [ ] User can edit a Budgeted cell and save on blur/Enter (not on keystroke)
-- [ ] Saved budgets persist in Google Sheets and reload from cache on revisit
-- [ ] Ready to Assign banner shows total income minus total budgeted (green/red)
-- [ ] Available goes red when negative (overspent)
-- [ ] Budget page loads transactions for month if not already cached
+- [x] User can navigate to /budget via bottom nav
+- [x] All expense categories appear as rows with Budgeted / Spent / Available columns
+- [x] User can edit a Budgeted cell and save on blur/Enter (not on keystroke)
+- [x] Saved budgets persist in Google Sheets and reload from cache on revisit
+- [x] Ready to Assign banner shows total income minus total budgeted (green/red)
+- [x] Available goes red when negative (overspent)
+- [x] Budget page loads transactions for month if not already cached
 
 Plans:
-- [ ] 04-01-PLAN.md — GAS Budgets sheet tab + getBudgets + setBudget endpoints
-- [ ] 04-02-PLAN.md — TypeScript types + API functions + useBudgetStore (data layer)
-- [ ] 04-03-PLAN.md — BudgetPage + BudgetCategoryRow + /budget route + BottomNav third tab
+- [x] 04-01-PLAN.md — GAS Budgets sheet tab + getBudgets + setBudget endpoints
+- [x] 04-02-PLAN.md — TypeScript types + API functions + useBudgetStore (data layer)
+- [x] 04-03-PLAN.md — BudgetPage + BudgetCategoryRow + /budget route + BottomNav third tab
 
 ---
 

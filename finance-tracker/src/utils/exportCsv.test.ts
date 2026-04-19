@@ -96,8 +96,13 @@ describe('exportTransactionsCsv', () => {
     }
     exportTransactionsCsv(transactions, categories, '2024-01')
     expect(capturedBlob).not.toBeNull()
-    const text = await capturedBlob!.text()
-    expect(text.startsWith('\uFEFF')).toBe(true)
+    // Read raw bytes to verify BOM prefix (blob.text() may strip the BOM character)
+    const buffer = await capturedBlob!.arrayBuffer()
+    const bytes = new Uint8Array(buffer)
+    // UTF-8 BOM bytes: 0xEF, 0xBB, 0xBF
+    expect(bytes[0]).toBe(0xef)
+    expect(bytes[1]).toBe(0xbb)
+    expect(bytes[2]).toBe(0xbf)
   })
 
   it('CSV has correct header row', async () => {
@@ -109,7 +114,9 @@ describe('exportTransactionsCsv', () => {
     }
     exportTransactionsCsv(transactions, categories, '2024-01')
     const text = await capturedBlob!.text()
-    const lines = text.slice(1).split('\r\n') // skip BOM
+    // blob.text() may strip BOM — strip it if present, then check header
+    const stripped = text.replace(/^\uFEFF/, '')
+    const lines = stripped.split('\r\n')
     expect(lines[0]).toBe('Date,Type,Category,Amount (VND),Note')
   })
 
@@ -193,7 +200,9 @@ describe('exportTransactionsCsv', () => {
     }
     exportTransactionsCsv([], categories, '2024-01')
     const text = await capturedBlob!.text()
-    const lines = text.slice(1).split('\r\n').filter(Boolean) // skip BOM
+    // blob.text() may strip BOM — strip it if present
+    const stripped = text.replace(/^\uFEFF/, '')
+    const lines = stripped.split('\r\n').filter(Boolean)
     expect(lines).toHaveLength(1)
     expect(lines[0]).toBe('Date,Type,Category,Amount (VND),Note')
   })

@@ -70,20 +70,20 @@
 **Done when:**
 - [ ] App can be installed on Android via "Add to Home Screen" and opens standalone
 - [ ] App can be added on iOS and opens without Safari browser chrome
-- [ ] App passes Lighthouse PWA audit (score ≥ 90)
+- [ ] App passes Lighthouse PWA audit (score >= 90)
 - [ ] Content renders correctly on 320px–430px screen widths
 - [ ] iPhone bottom safe area is handled (bottom nav not obscured by home indicator)
 - [ ] User can export current month's transactions to CSV and download it
 - [ ] CSV opens correctly in Excel/Google Sheets
 - [ ] GitHub Actions auto-deploys on push to main
 
-**Plans:**
-1. PWA manifest + vite-plugin-pwa + Workbox service worker
-2. iOS safe area fixes + mobile viewport meta tags
-3. Responsive QA pass (test at 320px, 375px, 390px, 430px)
-4. CSV export (generate in-browser, trigger download)
-5. GitHub Actions deploy workflow
-6. Lighthouse audit + fixes
+**Plans:** 4 plans (gap closure — Plan 01 done, Plans 02–04 are gap-closure plans)
+
+Plans:
+- [x] 03-01-PLAN.md — PWA manifest + vite-plugin-pwa + Workbox service worker (DONE)
+- [ ] 03-02-PLAN.md — BottomNav safe-area fix + viewport meta correction
+- [ ] 03-03-PLAN.md — CSV export utility (exportCsv.ts) + export button in Header
+- [ ] 03-04-PLAN.md — Responsive QA pass (320–430px) + Lighthouse audit checkpoint
 
 **Requirements covered:** EXPORT-01–03, PWA-01–03
 

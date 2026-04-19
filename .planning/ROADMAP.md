@@ -12,7 +12,7 @@
 |---|---|---|---|---|
 | 1 | Core Entry & Sync | Users can log income/expenses and see them synced | AUTH-01–04, TRANS-01–12, CAT-01–03 | 🔲 Pending |
 | 2 | Dashboard & Analytics | Users can understand their spending via charts | DASH-01–05, REPORT-01–03 | 🔲 Pending |
-| 3 | 2/4 | In Progress|  | 🔲 Pending |
+| 3 | 4/4 | Complete   | 2026-04-19 | 🔲 Pending |
 
 ---
 
@@ -77,7 +77,7 @@
 - [ ] CSV opens correctly in Excel/Google Sheets
 - [ ] GitHub Actions auto-deploys on push to main
 
-**Plans:** 2/4 plans executed
+**Plans:** 4/4 plans complete
 
 Plans:
 - [x] 03-01-PLAN.md — PWA manifest + vite-plugin-pwa + Workbox service worker (DONE)

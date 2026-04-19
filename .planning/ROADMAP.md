@@ -32,7 +32,7 @@
 **Plans:**
 1. Google Sheets + GAS API setup (schema, all 5 endpoints, CORS-safe, tested with curl)
 2. React project bootstrap (Vite + TypeScript + Tailwind + Zustand + React Router) — SUMMARY: 01-02-SUMMARY.md
-3. Google Sign-In flow (One Tap + button, token refresh, api.ts wrapper)
+3. Google Sign-In flow (One Tap + button, token refresh, api.ts wrapper) — SUMMARY: 01-03-SUMMARY.md
 4. Add Transaction UI (FAB → bottom drawer → amount + category grid + date + note)
 5. Transaction list view (monthly grouped list, month selector navigation)
 6. Edit + delete transaction

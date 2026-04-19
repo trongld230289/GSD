@@ -4,12 +4,12 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 04
 status: unknown
-last_updated: "2026-04-19T05:37:26.541Z"
+last_updated: "2026-04-19T05:41:42.090Z"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 4
-  completed_plans: 5
+  completed_plans: 7
   percent: 67
 ---
 
@@ -127,6 +127,9 @@ If any test fails, fix it before starting Phase 2.
 - [Phase 01-core-entry-sync]: GAS URL hardcoded in gas.ts instead of env var — single-user app, simplifies GitHub Pages deployment
 - [Phase 01-core-entry-sync]: Single useStore.ts with three named Zustand stores instead of separate store files
 - [Phase 01-core-entry-sync]: IDs generated server-side by GAS — omitted client-side utils/id.ts
+- [Phase 01-core-entry-sync]: No AuthProvider component — App.tsx auth-guard routes + LoginPage GSI init achieves same result with less abstraction
+- [Phase 01-core-entry-sync]: tokenExpiry persisted in Zustand store (not in-memory timer) — refresh scheduling survives page reload
+- [Phase 01-core-entry-sync]: useTokenRefresh hook mounted in Header (authenticated context) — avoids scheduling when logged out
 
 ## Requirements Progress
 

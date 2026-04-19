@@ -2,7 +2,10 @@ import { NavLink } from 'react-router-dom'
 
 export default function BottomNav() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-100 z-30 flex">
+    <nav
+      className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-100 z-30 flex"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+    >
       <NavLink
         to="/"
         end

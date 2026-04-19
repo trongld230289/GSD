@@ -26,8 +26,8 @@
 - [ ] **TRANS-08**: User can view a list of transactions for the current month grouped by date
 - [ ] **TRANS-09**: User can navigate to previous/next months via arrow buttons (← March 2026 →)
 - [ ] **TRANS-10**: Each transaction shows: amount (VND formatted), category icon+name, date, note (if any)
-- [ ] **TRANS-11**: User can delete a transaction (with confirmation prompt)
-- [ ] **TRANS-12**: User can edit an existing transaction (all fields modifiable)
+- [x] **TRANS-11**: User can delete a transaction (with confirmation prompt)
+- [x] **TRANS-12**: User can edit an existing transaction (all fields modifiable)
 
 ### Categories
 - [ ] **CAT-01**: App ships with 12 default expense categories:
@@ -57,8 +57,8 @@
 
 ### Responsive / PWA
 - [ ] **PWA-01**: App is fully usable on mobile screen sizes (320px–430px width)
-- [ ] **PWA-02**: App is installable on Android and iOS via "Add to Home Screen" (valid PWA manifest + service worker)
-- [ ] **PWA-03**: Previously loaded transaction data is viewable offline (service worker cache)
+- [x] **PWA-02**: App is installable on Android and iOS via "Add to Home Screen" (valid PWA manifest + service worker)
+- [x] **PWA-03**: Previously loaded transaction data is viewable offline (service worker cache)
 
 ---
 

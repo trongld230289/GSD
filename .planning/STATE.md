@@ -4,12 +4,12 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 03
 status: unknown
-last_updated: "2026-04-19T05:57:47.215Z"
+last_updated: "2026-04-19T06:01:28.427Z"
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 4
-  completed_plans: 14
+  completed_plans: 15
 ---
 
 ---
@@ -194,6 +194,8 @@ progress:
 - [Phase 01-core-entry-sync]: ConfirmDialog placed in src/components/ (flat structure, no shared/ dir)
 - [Phase 01-core-entry-sync]: Delete state owned by HomePage — TransactionItem fires onDeleteStart callback, page calls apiDeleteTransaction
 - [Phase 01-core-entry-sync]: window.confirm replaced with ConfirmDialog — native dialogs break mobile PWA UX
+- [Phase 03-mobile-polish-export]: PWA scope and start_url set to '/GSD/' not '/' — required for GitHub Pages sub-path deployment
+- [Phase 03-mobile-polish-export]: Icons generated via custom Node.js sharp script due to pwa-assets-generator Windows DLL loading failure
 
 ## Requirements Progress
 

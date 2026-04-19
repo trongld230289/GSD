@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useAuthStore, useAppStore } from '../store/useStore'
-import { apiGetTransactions, apiGetCategories } from '../api/gas'
+import { apiGetTransactions, apiGetCategories, apiDeleteTransaction } from '../api/gas'
 import { format } from 'date-fns'
+import type { Transaction } from '../types'
 import BalanceSummary from '../components/BalanceSummary'
 import MonthNav from '../components/MonthNav'
 import TransactionList from '../components/TransactionList'
 import FAB from '../components/FAB'
 import AddTransactionDrawer from '../components/AddTransactionDrawer'
+import ConfirmDialog from '../components/ConfirmDialog'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
 import SpendingChart from '../components/SpendingChart'
@@ -21,11 +23,14 @@ export default function HomePage() {
     setTransactions,
     setCategories,
     setLoadingTx,
+    removeTransaction,
     txCache,
     setCachedTransactions,
   } = useAppStore()
 
   const [catError, setCatError] = useState<string | null>(null)
+  const [deleteTx, setDeleteTx] = useState<Transaction | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   // Load categories once (no auth needed — categories are global)
   useEffect(() => {
@@ -61,6 +66,21 @@ export default function HomePage() {
     }
   }, [transactions, isLoadingTx])
 
+  const handleDeleteConfirm = async () => {
+    if (!deleteTx || !idToken) return
+    setIsDeleting(true)
+    try {
+      await apiDeleteTransaction(idToken, deleteTx.id)
+      removeTransaction(deleteTx.id)
+      setDeleteTx(null)
+    } catch (err) {
+      console.error(err)
+      alert('Failed to delete. Please try again.')
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col max-w-md mx-auto relative">
       <Header user={user} onSignOut={clearUser} />
@@ -84,7 +104,11 @@ export default function HomePage() {
             <p className="text-sm mt-1">Tap + to add your first one</p>
           </div>
         ) : (
-          <TransactionList transactions={transactions} categories={categories} />
+          <TransactionList
+            transactions={transactions}
+            categories={categories}
+            onDeleteStart={setDeleteTx}
+          />
         )}
       </div>
 
@@ -95,6 +119,15 @@ export default function HomePage() {
       )}
       <FAB />
       <AddTransactionDrawer categories={categories} />
+      <ConfirmDialog
+        isOpen={!!deleteTx}
+        title="Delete transaction?"
+        message="This will permanently remove this transaction from your records."
+        confirmLabel={isDeleting ? 'Deleting…' : 'Delete'}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteTx(null)}
+        destructive
+      />
       <BottomNav />
     </div>
   )

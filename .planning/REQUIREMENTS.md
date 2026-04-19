@@ -64,11 +64,14 @@
 
 ## v2 Requirements
 
-### Budget Management
-- **BUDGET-01**: User can set a monthly spending limit per expense category
-- **BUDGET-02**: Dashboard shows progress bar (amount spent vs. budget limit) per category
-- **BUDGET-03**: System alerts user when spending reaches 80% of a category's budget
-- **BUDGET-04**: Budget limits carry over each month automatically
+### Budget Management (YNAB-style allocation)
+- **BUDGET-01**: GAS backend stores per-category monthly budget allocations in a Budgets sheet (month, category_id, budgeted columns); getBudgets and setBudget endpoints read/upsert rows with exact month matching and no duplicates
+- **BUDGET-02**: GAS setBudget endpoint upserts correctly — updates existing row on repeat call for same month+category_id, never creates duplicates
+- **BUDGET-03**: BudgetEntry and BudgetRow TypeScript types exported from types.ts; apiGetBudgets and apiSetBudget API functions exported from gas.ts following gasGet/gasPost pattern
+- **BUDGET-04**: useBudgetStore Zustand slice with YYYY-MM keyed cache, setBudgets, updateBudgetEntry, setBudgetMonth, setLoadingBudgets actions — no persist middleware (always fresh from GAS)
+- **BUDGET-05**: User can navigate to /budget from a "Budget" tab in the bottom navigation bar
+- **BUDGET-06**: Budget page shows a row per expense category with Budgeted (inline editable), Spent, and Available (Budgeted − Spent) columns; Available shown in red when negative
+- **BUDGET-07**: Ready to Assign banner shows total income minus total budgeted for the month; green when ≥ 0, red with "Over-budgeted by X" when negative; saves to GAS on blur or Enter only
 
 ### Recurring Transactions
 - **RECUR-01**: User can mark a transaction as recurring (monthly, weekly)
@@ -109,10 +112,12 @@
 | REPORT-01–03 | Phase 2 | Pending |
 | EXPORT-01–03 | Phase 3 | Pending |
 | PWA-01–03 | Phase 3 | Pending |
+| BUDGET-01–07 | Phase 4 | Complete |
 
 **Coverage:**
 - v1 requirements: 34 total
-- Mapped to phases: 34
+- v2 requirements (Phase 4): 7 total
+- Mapped to phases: 41
 - Unmapped: 0 ✓
 
 ---

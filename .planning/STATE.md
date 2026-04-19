@@ -2,11 +2,26 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
+current_phase: Phase 1 — Plan 5 complete, continuing to Plan 6 (Edit & Delete)
+status: unknown
+last_updated: "2026-04-19T05:51:28.824Z"
+progress:
+  total_phases: 4
+  completed_phases: 1
+  total_plans: 4
+  completed_plans: 10
+  percent: 100
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
 current_phase: Phase 1 — Plan 4 complete, continuing to Plan 5 (Transaction List View)
 status: unknown
 last_updated: "2026-04-19T05:47:32.779Z"
 progress:
-  total_phases: 4
+  [██████████] 100%
   completed_phases: 1
   total_plans: 4
   completed_plans: 9
@@ -45,8 +60,8 @@ progress:
 # Project State: Finance Tracker
 
 **Last Updated:** 2026-04-19
-**Current Phase:** Phase 1 — Plan 5 complete, continuing to Plan 6 (Edit & Delete)
-**Overall Status:** Phase 1 in progress — Plans 1-5 complete
+**Current Phase:** Phase 1 COMPLETE — All 6 plans done. Ready for Phase 2 (Dashboard & Analytics)
+**Overall Status:** Phase 1 complete — Plans 1-6 done, CRUD loop closed
 
 ## Deployment Info
 
@@ -85,10 +100,17 @@ progress:
 - HomePage fully wired with month-keyed txCache ✅
 - Build: zero TypeScript errors, 3.41s ✅
 
-### What to do NEXT (Plan 6: Edit & Delete)
-- Edit drawer pre-fill from `useAppStore.editingTransaction` (tap TransactionItem already calls `openDrawer(tx)`)
-- Delete confirmation modal before `removeTransaction`
-- Update transaction in GAS via `apiUpdateTransaction`
+### Plan 6 completed (Edit & Delete)
+- ConfirmDialog component created — styled modal replaces window.confirm ✅
+- TransactionItem lifts delete via onDeleteStart callback ✅
+- HomePage owns delete state + apiDeleteTransaction call ✅
+- Edit flow pre-existing (Plan 4): tap row → drawer pre-fills → Update saves to GAS ✅
+- Build: zero TypeScript errors, 3.32s ✅
+
+### What to do NEXT (Phase 2: Dashboard & Analytics)
+- Pie/donut chart of spending by category (Recharts)
+- 6-month income vs expense bar chart
+- Charts already in HomePage via SpendingChart (may be partially pre-built)
 
 ### Phase 2 scope (after verification)
 - Pie/donut chart of spending by category (Recharts)
@@ -101,7 +123,7 @@ progress:
 
 | Phase | Status | Started | Completed |
 |---|---|---|---|
-| Phase 1: Core Entry & Sync | � Verify | 2026-04-10 | Pending final test |
+| Phase 1: Core Entry & Sync | ✅ Complete | 2026-04-10 | 2026-04-19 |
 | Phase 2: Dashboard & Analytics | 🔲 Pending | — | — |
 | Phase 3: Mobile Polish & Export | 🔲 Pending | — | — |
 
@@ -155,6 +177,9 @@ progress:
 - [Phase 01-core-entry-sync]: MonthNav uses date-fns Date object (not month/year integers) — consistent with useAppStore.currentMonth type
 - [Phase 01-core-entry-sync]: useTransactions logic inline in HomePage with txCache — cache-on-navigate avoids redundant GAS fetches
 - [Phase 01-core-entry-sync]: TransactionItem swipe-to-delete implemented inline — full CRUD on home screen, Plan 6 edit/delete partially pre-completed
+- [Phase 01-core-entry-sync]: ConfirmDialog placed in src/components/ (flat structure, no shared/ dir)
+- [Phase 01-core-entry-sync]: Delete state owned by HomePage — TransactionItem fires onDeleteStart callback, page calls apiDeleteTransaction
+- [Phase 01-core-entry-sync]: window.confirm replaced with ConfirmDialog — native dialogs break mobile PWA UX
 
 ## Requirements Progress
 

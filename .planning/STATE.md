@@ -4,12 +4,12 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 03
 status: unknown
-last_updated: "2026-04-19T06:01:28.427Z"
+last_updated: "2026-04-19T10:30:58.989Z"
 progress:
   total_phases: 4
-  completed_phases: 2
-  total_plans: 4
-  completed_plans: 15
+  completed_phases: 1
+  total_plans: 7
+  completed_plans: 16
 ---
 
 ---
@@ -196,6 +196,8 @@ progress:
 - [Phase 01-core-entry-sync]: window.confirm replaced with ConfirmDialog — native dialogs break mobile PWA UX
 - [Phase 03-mobile-polish-export]: PWA scope and start_url set to '/GSD/' not '/' — required for GitHub Pages sub-path deployment
 - [Phase 03-mobile-polish-export]: Icons generated via custom Node.js sharp script due to pwa-assets-generator Windows DLL loading failure
+- [Phase 03-mobile-polish-export]: Used inline style paddingBottom: env(safe-area-inset-bottom) on BottomNav nav element — avoids Tailwind purge concern and is explicit
+- [Phase 03-mobile-polish-export]: status-bar-style set to black-translucent — required companion to viewport-fit=cover for correct iOS overlay behaviour
 
 ## Requirements Progress
 

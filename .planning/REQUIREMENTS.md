@@ -56,7 +56,7 @@
 - [ ] **EXPORT-03**: Data is also directly accessible in the user's Google Sheet (read-only for power users)
 
 ### Responsive / PWA
-- [ ] **PWA-01**: App is fully usable on mobile screen sizes (320px–430px width)
+- [x] **PWA-01**: App is fully usable on mobile screen sizes (320px–430px width)
 - [x] **PWA-02**: App is installable on Android and iOS via "Add to Home Screen" (valid PWA manifest + service worker)
 - [x] **PWA-03**: Previously loaded transaction data is viewable offline (service worker cache)
 

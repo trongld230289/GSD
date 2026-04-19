@@ -12,7 +12,7 @@
 |---|---|---|---|---|
 | 1 | Core Entry & Sync | Users can log income/expenses and see them synced | AUTH-01–04, TRANS-01–12, CAT-01–03 | 🔲 Pending |
 | 2 | Dashboard & Analytics | Users can understand their spending via charts | DASH-01–05, REPORT-01–03 | 🔲 Pending |
-| 3 | Mobile Polish & Export | App installs on phone, data exportable | EXPORT-01–03, PWA-01–03 | 🔲 Pending |
+| 3 | 2/4 | In Progress|  | 🔲 Pending |
 
 ---
 
@@ -77,7 +77,7 @@
 - [ ] CSV opens correctly in Excel/Google Sheets
 - [ ] GitHub Actions auto-deploys on push to main
 
-**Plans:** 4 plans (gap closure — Plan 01 done, Plans 02–04 are gap-closure plans)
+**Plans:** 2/4 plans executed
 
 Plans:
 - [x] 03-01-PLAN.md — PWA manifest + vite-plugin-pwa + Workbox service worker (DONE)

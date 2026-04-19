@@ -4,12 +4,12 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 04
 status: unknown
-last_updated: "2026-04-19T00:06:21.323Z"
+last_updated: "2026-04-19T05:37:26.541Z"
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 4
+  total_plans: 4
+  completed_plans: 5
   percent: 67
 ---
 
@@ -124,6 +124,9 @@ If any test fails, fix it before starting Phase 2.
 - [Phase 04-ynab-budget-allocation]: BottomNav Budget tab uses money-bag emoji (consistent with existing emoji pattern)
 - [Phase 04-ynab-budget-allocation]: computeBudgetRows defined inside BudgetPage.tsx (not exported utility) to keep UI logic co-located
 - [Phase 04-ynab-budget-allocation]: BudgetPage loads transactions independently if txCache is empty (direct /budget navigation works without white screen)
+- [Phase 01-core-entry-sync]: GAS URL hardcoded in gas.ts instead of env var — single-user app, simplifies GitHub Pages deployment
+- [Phase 01-core-entry-sync]: Single useStore.ts with three named Zustand stores instead of separate store files
+- [Phase 01-core-entry-sync]: IDs generated server-side by GAS — omitted client-side utils/id.ts
 
 ## Requirements Progress
 

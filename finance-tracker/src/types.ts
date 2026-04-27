@@ -56,3 +56,19 @@ export interface GasResponse<T> {
   data?: T
   error?: string
 }
+
+// ─── Budget Types ─────────────────────────────────────────────────────────────
+
+// Raw entry as stored in GAS / returned by getBudgets
+export interface BudgetEntry {
+  category_id: string
+  budgeted: number   // VND, whole integer
+}
+
+// Computed row for budget UI display
+export interface BudgetRow {
+  category: Category
+  budgeted: number
+  spent: number
+  available: number   // budgeted - spent; negative = overspent
+}

@@ -3,6 +3,7 @@ import { useAuthStore } from './store/useStore'
 import LoginPage from './pages/LoginPage'
 import HomePage from './pages/HomePage'
 import ReportsPage from './pages/ReportsPage'
+import BudgetPage from './pages/BudgetPage'
 
 export default function App() {
   const { user } = useAuthStore()
@@ -17,6 +18,10 @@ export default function App() {
         <Route
           path="/reports"
           element={user ? <ReportsPage /> : <Navigate to="/login" replace />}
+        />
+        <Route
+          path="/budget"
+          element={user ? <BudgetPage /> : <Navigate to="/login" replace />}
         />
         <Route
           path="/*"

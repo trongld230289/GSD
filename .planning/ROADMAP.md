@@ -1,6 +1,6 @@
 # Roadmap: Finance Tracker
 
-**Created:** 2026-04-07
+**Created:** 2004-04-07
 **Phases:** 3
 **Strategy:** Coarse granularity — each phase delivers a complete vertical slice of value.
 
@@ -12,7 +12,7 @@
 |---|---|---|---|---|
 | 1 | Core Entry & Sync | Users can log income/expenses and see them synced | AUTH-01–04, TRANS-01–12, CAT-01–03 | 🔲 Pending |
 | 2 | Dashboard & Analytics | Users can understand their spending via charts | DASH-01–05, REPORT-01–03 | 🔲 Pending |
-| 3 | Mobile Polish & Export | App installs on phone, data exportable | EXPORT-01–03, PWA-01–03 | 🔲 Pending |
+| 3 | 2/4 | In Progress|  | 🔲 Pending |
 
 ---
 
@@ -31,9 +31,9 @@
 
 **Plans:**
 1. Google Sheets + GAS API setup (schema, all 5 endpoints, CORS-safe, tested with curl)
-2. React project bootstrap (Vite + TypeScript + Tailwind + Zustand + React Router)
-3. Google Sign-In flow (One Tap + button, token refresh, api.ts wrapper)
-4. Add Transaction UI (FAB → bottom drawer → amount + category grid + date + note)
+2. React project bootstrap (Vite + TypeScript + Tailwind + Zustand + React Router) — SUMMARY: 01-02-SUMMARY.md
+3. Google Sign-In flow (One Tap + button, token refresh, api.ts wrapper) — SUMMARY: 01-03-SUMMARY.md
+4. Add Transaction UI (FAB → bottom drawer → amount + category grid + date + note) — SUMMARY: 01-04-SUMMARY.md
 5. Transaction list view (monthly grouped list, month selector navigation)
 6. Edit + delete transaction
 
@@ -70,22 +70,46 @@
 **Done when:**
 - [ ] App can be installed on Android via "Add to Home Screen" and opens standalone
 - [ ] App can be added on iOS and opens without Safari browser chrome
-- [ ] App passes Lighthouse PWA audit (score ≥ 90)
+- [ ] App passes Lighthouse PWA audit (score >= 90)
 - [ ] Content renders correctly on 320px–430px screen widths
 - [ ] iPhone bottom safe area is handled (bottom nav not obscured by home indicator)
 - [ ] User can export current month's transactions to CSV and download it
 - [ ] CSV opens correctly in Excel/Google Sheets
 - [ ] GitHub Actions auto-deploys on push to main
 
-**Plans:**
-1. PWA manifest + vite-plugin-pwa + Workbox service worker
-2. iOS safe area fixes + mobile viewport meta tags
-3. Responsive QA pass (test at 320px, 375px, 390px, 430px)
-4. CSV export (generate in-browser, trigger download)
-5. GitHub Actions deploy workflow
-6. Lighthouse audit + fixes
+**Plans:** 2/4 plans executed
+
+Plans:
+- [x] 03-01-PLAN.md — PWA manifest + vite-plugin-pwa + Workbox service worker (DONE)
+- [ ] 03-02-PLAN.md — BottomNav safe-area fix + viewport meta correction
+- [ ] 03-03-PLAN.md — CSV export utility (exportCsv.ts) + export button in Header
+- [ ] 03-04-PLAN.md — Responsive QA pass (320–430px) + Lighthouse audit checkpoint
 
 **Requirements covered:** EXPORT-01–03, PWA-01–03
+
+---
+
+## Phase 4: YNAB Budget Allocation
+
+**Goal:** YNAB-style "give every dollar a job" — user assigns income to expense categories each month, sees Budgeted / Spent / Available per category, and gets a "Ready to Assign" banner showing unallocated income.
+
+**Requirements:** BUDGET-01, BUDGET-02, BUDGET-03, BUDGET-04, BUDGET-05, BUDGET-06, BUDGET-07
+**Depends on:** Phase 3
+**Plans:** 3/3 plans complete
+
+**Done when:**
+- [x] User can navigate to /budget via bottom nav
+- [x] All expense categories appear as rows with Budgeted / Spent / Available columns
+- [x] User can edit a Budgeted cell and save on blur/Enter (not on keystroke)
+- [x] Saved budgets persist in Google Sheets and reload from cache on revisit
+- [x] Ready to Assign banner shows total income minus total budgeted (green/red)
+- [x] Available goes red when negative (overspent)
+- [x] Budget page loads transactions for month if not already cached
+
+Plans:
+- [x] 04-01-PLAN.md — GAS Budgets sheet tab + getBudgets + setBudget endpoints
+- [x] 04-02-PLAN.md — TypeScript types + API functions + useBudgetStore (data layer)
+- [x] 04-03-PLAN.md — BudgetPage + BudgetCategoryRow + /budget route + BottomNav third tab
 
 ---
 
@@ -96,11 +120,7 @@
 | Monthly budget limits per category | Phase 4 | High |
 | Budget progress bars in dashboard | Phase 4 | High |
 | Alerts at 80% budget | Phase 4 | Medium |
-| Recurring transactions | Phase 5 | Medium |
+| Recurring transactions | Phase 4 | Medium |
 | Custom categories | Phase 4 | Low |
-| Dark mode | Phase 5 | Low |
-| Multi-currency (VND + USD) | Phase 5 | Low |
-
----
-*Roadmap created: 2026-04-07*
-*Last updated: 2026-04-07 after initial creation*
+| Dark mode | Phase 4 | Low |
+| Multi-currency (VND + USD) | Phase 4 | Low |

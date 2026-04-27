@@ -1,10 +1,13 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import type { Category, TransactionType } from '../types'
-import { useAuthStore, useAppStore } from '../store/useStore'
+import { useAuthStore, useAppStore, useSettingsStore } from '../store/useStore'
 import { apiAddTransaction, apiUpdateTransaction } from '../api/gas'
+import { parseVoiceInput } from '../api/voice'
+import { useVoiceInput } from '../hooks/useVoiceInput'
 import { todayISO, normalizeDate } from '../utils/date'
 import { formatVND, parseVNDInput } from '../utils/format'
 import { CATEGORY_META_MAP } from '../data/categories'
+import SettingsModal from './SettingsModal'
 
 interface Props {
   categories: Category[]
@@ -12,6 +15,7 @@ interface Props {
 
 export default function AddTransactionDrawer({ categories }: Props) {
   const { idToken } = useAuthStore()
+  const { githubPAT } = useSettingsStore()
   const { isDrawerOpen, editingTransaction, closeDrawer, addTransaction, updateTransaction } =
     useAppStore()
 
@@ -24,6 +28,45 @@ export default function AddTransactionDrawer({ categories }: Props) {
   const [note, setNote] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState('')
+  const [voiceHint, setVoiceHint] = useState('')
+  const [showSettings, setShowSettings] = useState(false)
+  const voiceResetRef = useRef<() => void>(() => {})
+
+  const handleTranscript = useCallback(async (text: string) => {
+    setVoiceHint(`"${text}"`)
+    if (!githubPAT) {
+      setShowSettings(true)
+      voiceResetRef.current()
+      return
+    }
+    try {
+      const parsed = await parseVoiceInput(text, githubPAT)
+      setType(parsed.type)
+      setCategoryId(parsed.category_id)
+      setAmountStr(parsed.amount.toString())
+      setDate(parsed.date)
+      setNote(parsed.note)
+      setError('')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Voice parse failed')
+    } finally {
+      voiceResetRef.current()
+    }
+  }, [githubPAT])
+
+  const { state: voiceState, start: voiceStart, stop: voiceStop, reset: voiceReset } =
+    useVoiceInput({
+      onTranscript: handleTranscript,
+      onError: (msg) => setError(msg),
+    })
+
+  voiceResetRef.current = voiceReset
+
+  const handleVoiceClick = useCallback(() => {
+    if (!githubPAT) { setShowSettings(true); return }
+    if (voiceState === 'listening') voiceStop()
+    else voiceStart()
+  }, [githubPAT, voiceState, voiceStart, voiceStop])
 
   // Prefill form when editing
   useEffect(() => {
@@ -41,6 +84,7 @@ export default function AddTransactionDrawer({ categories }: Props) {
       setNote('')
     }
     setError('')
+    setVoiceHint('')
   }, [editingTransaction, isDrawerOpen])
 
   const filteredCategories = categories.filter((c) => c.type === type)
@@ -107,18 +151,44 @@ export default function AddTransactionDrawer({ categories }: Props) {
           <div className="w-10 h-1 bg-gray-300 rounded-full" />
         </div>
 
-        {/* Title + close */}
+        {/* Title + voice + close */}
         <div className="flex items-center justify-between px-5 py-2">
           <h2 className="text-base font-bold text-gray-800">
             {isEditing ? 'Edit Transaction' : 'New Transaction'}
           </h2>
-          <button
-            onClick={closeDrawer}
-            className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200"
-          >
-            ✕
-          </button>
+          <div className="flex items-center gap-2">
+            {!isEditing && (
+              <button
+                onClick={handleVoiceClick}
+                disabled={voiceState === 'processing'}
+                title={!githubPAT ? 'Cài GitHub PAT để dùng voice' : voiceState === 'listening' ? 'Dừng' : 'Voice input'}
+                className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-base
+                  ${voiceState === 'listening'
+                    ? 'bg-red-100 text-red-500 animate-pulse'
+                    : voiceState === 'processing'
+                    ? 'bg-gray-100 text-gray-400 cursor-wait'
+                    : 'bg-green-50 text-green-600 hover:bg-green-100'
+                  }`}
+              >
+                {voiceState === 'listening' ? '⏹' : voiceState === 'processing' ? '⏳' : '🎤'}
+              </button>
+            )}
+            <button
+              onClick={closeDrawer}
+              className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200"
+            >
+              ✕
+            </button>
+          </div>
         </div>
+
+        {/* Voice transcript hint */}
+        {voiceHint && voiceState === 'idle' && !error && (
+          <div className="mx-5 -mt-1 mb-1 px-3 py-1.5 bg-green-50 rounded-lg text-xs text-green-700 flex items-center gap-1.5">
+            <span>🎤</span>
+            <span className="italic">{voiceHint}</span>
+          </div>
+        )}
 
         <div className="px-5 pb-6 space-y-4" style={{ paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
           {/* Income / Expense toggle */}
@@ -257,6 +327,7 @@ export default function AddTransactionDrawer({ categories }: Props) {
           </button>
         </div>
       </div>
+      {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
     </>
   )
 }

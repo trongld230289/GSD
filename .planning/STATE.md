@@ -1,8 +1,81 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+current_phase: 03
+status: unknown
+last_updated: "2026-04-19T10:33:57.821Z"
+progress:
+  total_phases: 4
+  completed_phases: 1
+  total_plans: 7
+  completed_plans: 17
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+current_phase: Phase 1 — Plan 5 complete, continuing to Plan 6 (Edit & Delete)
+status: unknown
+last_updated: "2026-04-19T05:51:28.824Z"
+progress:
+  total_phases: 4
+  completed_phases: 1
+  total_plans: 4
+  completed_plans: 10
+  percent: 100
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+current_phase: Phase 1 — Plan 4 complete, continuing to Plan 5 (Transaction List View)
+status: unknown
+last_updated: "2026-04-19T05:47:32.779Z"
+progress:
+  [██████████] 100%
+  completed_phases: 1
+  total_plans: 4
+  completed_plans: 9
+  percent: 100
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+current_phase: 04
+status: unknown
+last_updated: "2026-04-19T05:44:35.031Z"
+progress:
+  [██████████] 100%
+  completed_phases: 1
+  total_plans: 4
+  completed_plans: 8
+  percent: 67
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+current_phase: Phase 1 — Verify remaining features, then start Phase 2
+status: unknown
+last_updated: "2026-04-18T17:43:53.136Z"
+progress:
+  [███████░░░] 67%
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 1
+---
+
 # Project State: Finance Tracker
 
-**Last Updated:** 2026-04-10 (end of day)
-**Current Phase:** Phase 1 — Verify remaining features, then start Phase 2
-**Overall Status:** 🟡 Phase 1 functionally complete, pending final verification tomorrow
+**Last Updated:** 2026-04-19
+**Current Phase:** 03
+**Overall Status:** Phase 1 complete — Plans 1-6 done, CRUD loop closed
 
 ## Deployment Info
 
@@ -32,14 +105,26 @@
 - New OAuth client (Web client 2) created with `https://trongld230289.github.io` as authorized origin ✅
 - Updated `LoginPage.tsx` with new OAuth Client ID ✅
 
-### What to do FIRST tomorrow (before Phase 2)
-Run these 3 verification tests on the live iPhone app (`https://trongld230289.github.io/GSD/`):
+### Plan 5 completed (Transaction List View)
+- MonthNav with prev/next arrows and future-month guard ✅
+- BalanceSummary (Income/Expense/Balance cards) ✅
+- TransactionItem with swipe-to-delete and edit tap ✅
+- TransactionList with date-grouped rows ✅
+- BottomNav (Home/Budget/Reports) ✅
+- HomePage fully wired with month-keyed txCache ✅
+- Build: zero TypeScript errors, 3.41s ✅
 
-1. **Swipe to delete** — swipe left on a transaction → red Delete button appears → tap → confirm → gone
-2. **Edit** — tap a transaction row → drawer opens pre-filled with existing values → change something → Save → updated in list
-3. **Month nav** — tap ‹ → March 2026 (empty) → tap › → back to April 2026 with transactions
+### Plan 6 completed (Edit & Delete)
+- ConfirmDialog component created — styled modal replaces window.confirm ✅
+- TransactionItem lifts delete via onDeleteStart callback ✅
+- HomePage owns delete state + apiDeleteTransaction call ✅
+- Edit flow pre-existing (Plan 4): tap row → drawer pre-fills → Update saves to GAS ✅
+- Build: zero TypeScript errors, 3.32s ✅
 
-If any test fails, fix it before starting Phase 2.
+### What to do NEXT (Phase 2: Dashboard & Analytics)
+- Pie/donut chart of spending by category (Recharts)
+- 6-month income vs expense bar chart
+- Charts already in HomePage via SpendingChart (may be partially pre-built)
 
 ### Phase 2 scope (after verification)
 - Pie/donut chart of spending by category (Recharts)
@@ -52,7 +137,7 @@ If any test fails, fix it before starting Phase 2.
 
 | Phase | Status | Started | Completed |
 |---|---|---|---|
-| Phase 1: Core Entry & Sync | � Verify | 2026-04-10 | Pending final test |
+| Phase 1: Core Entry & Sync | ✅ Complete | 2026-04-10 | 2026-04-19 |
 | Phase 2: Dashboard & Analytics | 🔲 Pending | — | — |
 | Phase 3: Mobile Polish & Export | 🔲 Pending | — | — |
 
@@ -76,6 +161,9 @@ If any test fails, fix it before starting Phase 2.
 4. Test GAS API with curl/Postman before integrating React
 5. Google OAuth token expires in 1 hour — build refresh logic in Phase 1
 
+### Roadmap Evolution
+- Phase 4 added: YNAB Budget Allocation (give every dollar a job — Available/Budgeted/Spent per category, overspend pulls from other categories)
+
 ### Decisions made
 - Google Sheets as database (user chose this over Firebase/Supabase)
 - VND only for v1
@@ -84,6 +172,34 @@ If any test fails, fix it before starting Phase 2.
 - Coarse granularity (3 phases)
 
 ---
+- [Phase 04-ynab-budget-allocation]: useBudgetStore omits persist middleware — budget data always fresh-loaded from GAS on mount
+- [Phase 04-ynab-budget-allocation]: BudgetRow is a computed UI-only type, not stored in Zustand — cross-references categories and transactions in UI layer
+- [Phase 04-ynab-budget-allocation]: Budgets stored in separate sheet tab (month|category_id|budgeted), no user_email column, Available computed client-side
+- [Phase 04-ynab-budget-allocation]: BottomNav Budget tab uses money-bag emoji, consistent with existing emoji pattern
+- [Phase 04-ynab-budget-allocation]: computeBudgetRows defined inside BudgetPage.tsx (not exported utility) to keep UI logic co-located
+- [Phase 04-ynab-budget-allocation]: BottomNav Budget tab uses money-bag emoji (consistent with existing emoji pattern)
+- [Phase 04-ynab-budget-allocation]: computeBudgetRows defined inside BudgetPage.tsx (not exported utility) to keep UI logic co-located
+- [Phase 04-ynab-budget-allocation]: BudgetPage loads transactions independently if txCache is empty (direct /budget navigation works without white screen)
+- [Phase 01-core-entry-sync]: GAS URL hardcoded in gas.ts instead of env var — single-user app, simplifies GitHub Pages deployment
+- [Phase 01-core-entry-sync]: Single useStore.ts with three named Zustand stores instead of separate store files
+- [Phase 01-core-entry-sync]: IDs generated server-side by GAS — omitted client-side utils/id.ts
+- [Phase 01-core-entry-sync]: No AuthProvider component — App.tsx auth-guard routes + LoginPage GSI init achieves same result with less abstraction
+- [Phase 01-core-entry-sync]: tokenExpiry persisted in Zustand store (not in-memory timer) — refresh scheduling survives page reload
+- [Phase 01-core-entry-sync]: useTokenRefresh hook mounted in Header (authenticated context) — avoids scheduling when logged out
+- [Phase 01-core-entry-sync]: AmountInput and CategoryGrid embedded inline in AddTransactionDrawer — single-use components with no reuse benefit from extraction
+- [Phase 01-core-entry-sync]: Drawer state in Zustand store (not page useState) — enables TransactionItem edit mode in Plan 6 without prop drilling
+- [Phase 01-core-entry-sync]: MonthNav uses date-fns Date object (not month/year integers) — consistent with useAppStore.currentMonth type
+- [Phase 01-core-entry-sync]: useTransactions logic inline in HomePage with txCache — cache-on-navigate avoids redundant GAS fetches
+- [Phase 01-core-entry-sync]: TransactionItem swipe-to-delete implemented inline — full CRUD on home screen, Plan 6 edit/delete partially pre-completed
+- [Phase 01-core-entry-sync]: ConfirmDialog placed in src/components/ (flat structure, no shared/ dir)
+- [Phase 01-core-entry-sync]: Delete state owned by HomePage — TransactionItem fires onDeleteStart callback, page calls apiDeleteTransaction
+- [Phase 01-core-entry-sync]: window.confirm replaced with ConfirmDialog — native dialogs break mobile PWA UX
+- [Phase 03-mobile-polish-export]: PWA scope and start_url set to '/GSD/' not '/' — required for GitHub Pages sub-path deployment
+- [Phase 03-mobile-polish-export]: Icons generated via custom Node.js sharp script due to pwa-assets-generator Windows DLL loading failure
+- [Phase 03-mobile-polish-export]: Used inline style paddingBottom: env(safe-area-inset-bottom) on BottomNav nav element — avoids Tailwind purge concern and is explicit
+- [Phase 03-mobile-polish-export]: status-bar-style set to black-translucent — required companion to viewport-fit=cover for correct iOS overlay behaviour
+- [Phase 03-mobile-polish-export]: UTF-8 BOM in CSV export required for Excel on Windows to read Vietnamese text correctly
+- [Phase 03-mobile-polish-export]: vitest + jsdom installed as first test infrastructure — test files excluded from main tsconfig to prevent global type errors
 
 ## Requirements Progress
 

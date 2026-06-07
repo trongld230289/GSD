@@ -39,14 +39,15 @@ Categories:
 ${categoryList}
 
 Return JSON only — no explanation:
-{"type":"income or expense","amount":number in VND,"category_id":"exact id","date":"YYYY-MM-DD","note":"short label"}
+{"type":"income or expense","amount":number in VND,"category_id":"exact id","date":"YYYY-MM-DD","note":"activity description"}
 
 Rules:
 - Amount: k/K/nghìn=×1000, triệu/tr/củ=×1000000
 - Expense words: chi, mua, trả, ăn, uống, đổ xăng, thuê, mất, tốn
 - Income words: nhận, lương, thu, kiếm, được, thưởng
 - Date: "hôm nay"=today, "hôm qua"=yesterday, "sáng/chiều/tối nay"=today; if unclear use ${today}
-- Pick category_id closest in meaning`,
+- Pick category_id closest in meaning
+- note = the specific activity/item from the input (e.g. "ăn cơm hết 50k" → note="ăn cơm", "mua cà phê 30k" → note="cà phê", "đổ xăng 100k" → note="đổ xăng"). Keep it short, in Vietnamese, preserve the original wording. Never leave note empty.`,
         },
       ],
       response_format: { type: 'json_object' },

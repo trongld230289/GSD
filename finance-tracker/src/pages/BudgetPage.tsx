@@ -100,7 +100,15 @@ export default function BudgetPage() {
     [budgetRows]
   )
 
+  const totalSpent = useMemo(
+    () => budgetRows.reduce((sum, r) => sum + r.spent, 0),
+    [budgetRows]
+  )
+
+  const totalAvailable = totalBudgeted - totalSpent
   const readyToAssign = totalIncome - totalBudgeted
+  const budgetedPct = totalIncome > 0 ? Math.min((totalBudgeted / totalIncome) * 100, 100) : 0
+  const isOver = readyToAssign < 0
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col max-w-md mx-auto relative">
@@ -117,33 +125,38 @@ export default function BudgetPage() {
 
         {/* Ready to Assign banner */}
         <div className="mx-4 my-4">
-          {readyToAssign >= 0 ? (
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-              <div className="text-xs text-green-600 font-medium uppercase tracking-wide mb-1">
-                Ready to Assign
+          <div className={`rounded-xl p-4 ${isOver ? 'bg-red-50 border border-red-200' : 'bg-green-50 border border-green-200'}`}>
+            <div className="flex items-start justify-between mb-3">
+              <div>
+                <div className={`text-xs font-semibold uppercase tracking-wide mb-0.5 ${isOver ? 'text-red-500' : 'text-green-600'}`}>
+                  Ready to Assign
+                </div>
+                <div className={`text-2xl font-bold ${isOver ? 'text-red-600' : 'text-green-700'}`}>
+                  {isOver ? '−' : ''}{formatVND(Math.abs(readyToAssign))}
+                </div>
               </div>
-              <div className="text-lg font-bold text-green-700">
-                {formatVND(readyToAssign)}
-              </div>
+              {totalIncome > 0 && (
+                <div className="text-right">
+                  <div className="text-xs text-gray-400 mb-0.5">Income</div>
+                  <div className="text-sm font-semibold text-gray-600">{formatVND(totalIncome)}</div>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4">
-              <div className="text-xs text-red-600 font-medium uppercase tracking-wide mb-1">
-                Over-budgeted by
-              </div>
-              <div className="text-lg font-bold text-red-700">
-                {formatVND(Math.abs(readyToAssign))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Column headers */}
-        <div className="flex items-center px-4 pb-1 gap-2">
-          <div className="flex-1 text-xs text-gray-400">Category</div>
-          <div className="w-28 text-right text-xs text-gray-400">Budgeted</div>
-          <div className="w-24 text-right text-xs text-gray-400">Spent</div>
-          <div className="w-24 text-right text-xs text-gray-400">Available</div>
+            {totalIncome > 0 && (
+              <>
+                <div className="h-1.5 bg-white/70 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${isOver ? 'bg-red-400' : 'bg-green-500'}`}
+                    style={{ width: `${budgetedPct}%` }}
+                  />
+                </div>
+                <div className="flex justify-between text-xs mt-1.5">
+                  <span className="text-gray-400">Budgeted {formatVND(totalBudgeted)}</span>
+                  <span className="text-gray-400">{Math.round(budgetedPct)}% of income</span>
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Budget rows */}
@@ -157,19 +170,44 @@ export default function BudgetPage() {
             <p className="font-medium">No expense categories yet</p>
           </div>
         ) : (
-          <div className="bg-white rounded-xl mx-4 shadow-sm overflow-hidden">
-            {budgetRows.map((row) => (
-              <BudgetCategoryRow
-                key={row.category.id}
-                row={row}
-                month={monthKey}
-                token={idToken ?? ''}
-                onSaved={(category_id, budgeted) =>
-                  updateBudgetEntry(monthKey, category_id, budgeted)
-                }
-              />
-            ))}
-          </div>
+          <>
+            <div className="bg-white rounded-xl mx-4 shadow-sm overflow-hidden">
+              {budgetRows.map((row) => (
+                <BudgetCategoryRow
+                  key={row.category.id}
+                  row={row}
+                  month={monthKey}
+                  token={idToken ?? ''}
+                  onSaved={(category_id, budgeted) =>
+                    updateBudgetEntry(monthKey, category_id, budgeted)
+                  }
+                />
+              ))}
+            </div>
+
+            {/* Totals row */}
+            <div className="mx-4 mt-3">
+              <div className="bg-white rounded-xl shadow-sm px-4 py-3 flex items-center justify-between">
+                <span className="text-sm font-semibold text-gray-700">Total</span>
+                <div className="flex gap-5 text-xs">
+                  <div className="text-right">
+                    <div className="text-gray-400 mb-0.5">Budgeted</div>
+                    <div className="font-semibold text-gray-700">{formatVND(totalBudgeted)}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-gray-400 mb-0.5">Spent</div>
+                    <div className="font-semibold text-gray-700">{formatVND(totalSpent)}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-gray-400 mb-0.5">Left</div>
+                    <div className={`font-semibold ${totalAvailable < 0 ? 'text-red-500' : 'text-green-600'}`}>
+                      {formatVND(totalAvailable)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
         )}
       </div>
 

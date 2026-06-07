@@ -4,7 +4,6 @@ import { apiGetTransactions, apiGetCategories, apiDeleteTransaction } from '../a
 import { format } from 'date-fns'
 import type { Transaction } from '../types'
 import BalanceSummary from '../components/BalanceSummary'
-import MonthNav from '../components/MonthNav'
 import TransactionList from '../components/TransactionList'
 import FAB from '../components/FAB'
 import AddTransactionDrawer from '../components/AddTransactionDrawer'
@@ -86,7 +85,6 @@ export default function HomePage() {
       <Header user={user} onSignOut={clearUser} />
 
       <div className="flex-1 overflow-y-auto pb-24">
-        <MonthNav />
         <BalanceSummary transactions={transactions} />
 
         {!isLoadingTx && (

@@ -1,0 +1,182 @@
+<h2>Budget Page Layout — Chọn cách tổ chức 3 panel</h2>
+<p class="subtitle">Giống YNAB desktop. Chọn layout nào phù hợp nhất với bạn.</p>
+
+<div class="cards">
+
+  <!-- Option A: YNAB Faithful -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="display:flex;height:220px;font-size:11px;border:1px solid #ddd;border-radius:6px;overflow:hidden;">
+        <!-- Sidebar -->
+        <div style="width:72px;background:#1c2b4b;color:#fff;padding:8px 6px;display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
+          <div style="font-weight:700;font-size:10px;color:#7c9cbf;margin-bottom:4px;">Finance</div>
+          <div style="background:#2d4a7a;border-radius:4px;padding:4px 6px;font-size:10px;">📋 Plan</div>
+          <div style="padding:4px 6px;font-size:10px;color:#7c9cbf;">📊 Reflect</div>
+          <div style="padding:4px 6px;font-size:10px;color:#7c9cbf;">🏦 Accounts</div>
+          <div style="margin-top:8px;font-size:9px;color:#5a7a9a;">CASH $6,240</div>
+          <div style="padding:2px 6px;font-size:10px;color:#aaa;">Wage</div>
+        </div>
+        <!-- Main -->
+        <div style="flex:1;background:#f5f6fa;display:flex;flex-direction:column;">
+          <!-- Top bar -->
+          <div style="background:#fff;padding:8px 10px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #e5e7eb;">
+            <span style="font-size:11px;color:#666;">← Apr 2026 →</span>
+            <div style="background:#16a34a;color:#fff;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;margin-left:auto;">$1,000 Ready to Assign</div>
+          </div>
+          <!-- Filter tabs -->
+          <div style="padding:4px 10px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;gap:4px;">
+            <span style="background:#f3f4f6;border-radius:12px;padding:2px 6px;font-size:9px;">All</span>
+            <span style="background:#fee2e2;color:#dc2626;border-radius:12px;padding:2px 6px;font-size:9px;">1 Overspent</span>
+            <span style="background:#f3f4f6;border-radius:12px;padding:2px 6px;font-size:9px;">Underfunded</span>
+          </div>
+          <!-- Table header -->
+          <div style="display:grid;grid-template-columns:1fr 70px 70px 70px;padding:4px 10px;font-size:9px;color:#9ca3af;background:#fff;border-bottom:1px solid #e5e7eb;">
+            <span>CATEGORY</span><span style="text-align:right">ASSIGNED</span><span style="text-align:right">ACTIVITY</span><span style="text-align:right">AVAILABLE</span>
+          </div>
+          <!-- Group + rows -->
+          <div style="padding:4px 10px;">
+            <div style="display:grid;grid-template-columns:1fr 70px 70px 70px;font-size:9px;font-weight:700;color:#374151;padding:3px 0;">
+              <span>Bills</span><span style="text-align:right">$1,500</span><span style="text-align:right;color:#dc2626">-$760</span><span style="text-align:right">$740</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 70px 70px 70px;font-size:9px;color:#6b7280;padding:2px 0 2px 12px;">
+              <span>📺 TV, phone</span><span style="text-align:right">$300</span><span style="text-align:right;color:#dc2626">-$60</span>
+              <span style="text-align:right"><span style="background:#dcfce7;color:#16a34a;border-radius:10px;padding:1px 5px;">$240</span></span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 70px 70px 70px;font-size:9px;color:#6b7280;padding:2px 0 2px 12px;">
+              <span>🏦 Personal loans</span><span style="text-align:right">$300</span><span style="text-align:right;color:#dc2626">-$700</span>
+              <span style="text-align:right"><span style="background:#fee2e2;color:#dc2626;border-radius:10px;padding:1px 5px;">-$400</span></span>
+            </div>
+          </div>
+        </div>
+        <!-- Right panel -->
+        <div style="width:80px;background:#fff;border-left:1px solid #e5e7eb;padding:8px 6px;font-size:9px;">
+          <div style="font-weight:700;color:#374151;margin-bottom:6px;">Apr Summary</div>
+          <div style="color:#9ca3af;margin-bottom:2px;">Left Over</div>
+          <div style="font-weight:600;margin-bottom:4px;">$0</div>
+          <div style="color:#9ca3af;margin-bottom:2px;">Assigned</div>
+          <div style="font-weight:600;margin-bottom:4px;">$6,000</div>
+          <div style="color:#9ca3af;margin-bottom:2px;">Available</div>
+          <div style="font-weight:600;color:#16a34a;">$5,240</div>
+          <div style="margin-top:8px;font-weight:700;color:#374151;">Auto-Assign</div>
+          <div style="color:#9ca3af;margin-top:4px;">Underfunded</div>
+          <div style="color:#dc2626;font-weight:600;">$400</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — YNAB Faithful</h3>
+      <p>Sidebar trái (navy) + main table + right panel summary. 3 panel hoàn chỉnh, y hệt YNAB. Desktop-first, mobile collapse sidebar.</p>
+    </div>
+  </div>
+
+  <!-- Option B: No Right Panel -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="display:flex;height:220px;font-size:11px;border:1px solid #ddd;border-radius:6px;overflow:hidden;">
+        <!-- Sidebar -->
+        <div style="width:72px;background:#1c2b4b;color:#fff;padding:8px 6px;display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
+          <div style="font-weight:700;font-size:10px;color:#7c9cbf;margin-bottom:4px;">Finance</div>
+          <div style="background:#2d4a7a;border-radius:4px;padding:4px 6px;font-size:10px;">📋 Plan</div>
+          <div style="padding:4px 6px;font-size:10px;color:#7c9cbf;">📊 Reflect</div>
+          <div style="padding:4px 6px;font-size:10px;color:#7c9cbf;">🏦 Accounts</div>
+          <div style="margin-top:8px;font-size:9px;color:#5a7a9a;">CASH $6,240</div>
+          <div style="padding:2px 6px;font-size:10px;color:#aaa;">Wage</div>
+        </div>
+        <!-- Main full width -->
+        <div style="flex:1;background:#f5f6fa;display:flex;flex-direction:column;">
+          <div style="background:#fff;padding:8px 10px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #e5e7eb;">
+            <span style="font-size:11px;color:#666;">← Apr 2026 →</span>
+            <div style="background:#16a34a;color:#fff;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;margin-left:auto;">$1,000 Ready to Assign</div>
+          </div>
+          <div style="padding:4px 10px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;gap:4px;">
+            <span style="background:#f3f4f6;border-radius:12px;padding:2px 6px;font-size:9px;">All</span>
+            <span style="background:#fee2e2;color:#dc2626;border-radius:12px;padding:2px 6px;font-size:9px;">1 Overspent</span>
+            <span style="background:#f3f4f6;border-radius:12px;padding:2px 6px;font-size:9px;">Underfunded</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 80px 80px 80px;padding:4px 12px;font-size:9px;color:#9ca3af;background:#fff;border-bottom:1px solid #e5e7eb;">
+            <span>CATEGORY</span><span style="text-align:right">ASSIGNED</span><span style="text-align:right">ACTIVITY</span><span style="text-align:right">AVAILABLE</span>
+          </div>
+          <div style="padding:4px 12px;">
+            <div style="display:grid;grid-template-columns:1fr 80px 80px 80px;font-size:9px;font-weight:700;color:#374151;padding:3px 0;">
+              <span>Bills</span><span style="text-align:right">$1,500</span><span style="text-align:right;color:#dc2626">-$760</span><span style="text-align:right">$740</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 80px 80px 80px;font-size:9px;color:#6b7280;padding:2px 0 2px 12px;">
+              <span>📺 TV, phone</span><span style="text-align:right">$300</span><span style="text-align:right;color:#dc2626">-$60</span>
+              <span style="text-align:right"><span style="background:#dcfce7;color:#16a34a;border-radius:10px;padding:1px 5px;">$240</span></span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 80px 80px 80px;font-size:9px;color:#6b7280;padding:2px 0 2px 12px;">
+              <span>🏦 Personal loans</span><span style="text-align:right">$300</span><span style="text-align:right;color:#dc2626">-$700</span>
+              <span style="text-align:right"><span style="background:#fee2e2;color:#dc2626;border-radius:10px;padding:1px 5px;">-$400</span></span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 80px 80px 80px;font-size:9px;color:#6b7280;padding:2px 0 2px 12px;">
+              <span>🛒 Groceries</span><span style="text-align:right">$300</span><span style="text-align:right">$0</span>
+              <span style="text-align:right"><span style="background:#dcfce7;color:#16a34a;border-radius:10px;padding:1px 5px;">$300</span></span>
+            </div>
+          </div>
+          <!-- Summary bar at bottom instead -->
+          <div style="margin-top:auto;background:#f9fafb;border-top:1px solid #e5e7eb;padding:6px 12px;display:flex;gap:16px;font-size:9px;">
+            <span style="color:#9ca3af;">Left Over: <b style="color:#374151">$0</b></span>
+            <span style="color:#9ca3af;">Assigned: <b style="color:#374151">$6,000</b></span>
+            <span style="color:#9ca3af;">Available: <b style="color:#16a34a">$5,240</b></span>
+            <span style="color:#dc2626;margin-left:auto;">⚡ Underfunded: $400</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — 2 Panel (no right panel)</h3>
+      <p>Sidebar + main table full width. Summary hiện dưới dạng footer bar. Đơn giản hơn, phù hợp hơn cho màn nhỏ.</p>
+    </div>
+  </div>
+
+  <!-- Option C: Wide sidebar -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="display:flex;height:220px;font-size:11px;border:1px solid #ddd;border-radius:6px;overflow:hidden;">
+        <!-- Wide Sidebar -->
+        <div style="width:110px;background:#1c2b4b;color:#fff;padding:8px 8px;display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
+          <div style="font-weight:700;font-size:11px;color:#fff;margin-bottom:4px;">💰 Finance</div>
+          <div style="background:#2d4a7a;border-radius:4px;padding:5px 8px;font-size:10px;">📋 Plan</div>
+          <div style="padding:5px 8px;font-size:10px;color:#7c9cbf;">📊 Reflect</div>
+          <div style="padding:5px 8px;font-size:10px;color:#7c9cbf;">🏦 All Accounts</div>
+          <div style="margin-top:8px;font-size:9px;color:#5a7a9a;text-transform:uppercase;letter-spacing:0.5px;">CASH</div>
+          <div style="padding:3px 8px;font-size:10px;color:#cbd5e1;">Wage <span style="float:right;color:#fff">$6,240</span></div>
+          <div style="margin-top:auto;padding:5px 8px;font-size:9px;color:#5a7a9a;border-top:1px solid #2d4a7a;">+ Add Account</div>
+        </div>
+        <!-- Main -->
+        <div style="flex:1;background:#f5f6fa;display:flex;flex-direction:column;">
+          <div style="background:#fff;padding:8px 10px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #e5e7eb;">
+            <span style="font-size:11px;font-weight:600;color:#374151;">← Apr 2026 →</span>
+            <div style="background:#16a34a;color:#fff;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;margin-left:auto;">$1,000 · Assign ▾</div>
+          </div>
+          <div style="padding:4px 10px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;gap:4px;">
+            <span style="background:#f3f4f6;border-radius:12px;padding:2px 6px;font-size:9px;">All</span>
+            <span style="background:#fee2e2;color:#dc2626;border-radius:12px;padding:2px 6px;font-size:9px;">⚠ 1 Overspent</span>
+            <span style="background:#f3f4f6;border-radius:12px;padding:2px 6px;font-size:9px;">Underfunded</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 70px 70px 70px;padding:4px 10px;font-size:9px;color:#9ca3af;background:#fff;border-bottom:1px solid #e5e7eb;">
+            <span>CATEGORY</span><span style="text-align:right">ASSIGNED</span><span style="text-align:right">ACTIVITY</span><span style="text-align:right">AVAILABLE</span>
+          </div>
+          <div style="padding:4px 10px;overflow:auto;">
+            <div style="display:grid;grid-template-columns:1fr 70px 70px 70px;font-size:9px;font-weight:700;color:#374151;padding:3px 0;border-bottom:1px solid #f3f4f6;">
+              <span>▾ Bills</span><span style="text-align:right">$1,500</span><span style="text-align:right;color:#dc2626">-$760</span><span style="text-align:right">$740</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 70px 70px 70px;font-size:9px;color:#6b7280;padding:2px 0 2px 16px;">
+              <span>📺 TV, phone</span><span style="text-align:right">$300</span><span style="text-align:right;color:#dc2626">-$60</span>
+              <span style="text-align:right"><span style="background:#dcfce7;color:#16a34a;border-radius:10px;padding:1px 5px;">$240</span></span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 70px 70px 70px;font-size:9px;color:#6b7280;padding:2px 0 2px 16px;">
+              <span>🏦 Personal loans</span><span style="text-align:right">$300</span><span style="text-align:right;color:#dc2626">-$700</span>
+              <span style="text-align:right"><span style="background:#fee2e2;color:#dc2626;border-radius:10px;padding:1px 5px;">-$400</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Wide Sidebar (YNAB exact)</h3>
+      <p>Sidebar rộng hơn (~200px) giống YNAB thật — đủ chỗ hiện tên account + balance. Right panel ẩn mặc định, click để mở.</p>
+    </div>
+  </div>
+
+</div>
